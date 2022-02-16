@@ -15,31 +15,49 @@ set autoindent
 set clipboard=unnamed
 syntax on
 
-" 構文エラー行に「>>」を表示
-let g:syntastic_enable_signs = 1
-" 他のVimプラグインと競合するのを防ぐ
-let g:syntastic_always_populate_loc_list = 1
-" 構文エラーリストを非表示
-let g:syntastic_auto_loc_list = 0
-" ファイルを開いた時に構文エラーチェックを実行する
-let g:syntastic_check_on_open = 1
-" 「:wq」で終了する時も構文エラーチェックする
-let g:syntastic_check_on_wq = 1
+" Enable folding
+set foldmethod=indent
+set foldlevel=99
+nnoremap <space> za
+" ale
+let g:python3_host_prog = $HOME . '/venv/bin/python'
+" 各ツールをFixerとして登録
+let g:ale_fixers = {
+    \ 'python': ['autopep8', 'black', 'isort'],
+    \ }
+let g:ale_fix_on_save = 1
 
-let g:syntastic_python_checkers = ["flake8"]
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
+let g:ale_linters = {'python': ['flake8']}
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_sign_column_always = 1
+let g:lightline = {
+      \ 'colorscheme': 'one',
+     \ }
+" linelight-ale
+let g:lightline.component_expand = {
+  \   'linter_checking': 'lightline#ale#checking',
+  \   'linter_warnings': 'lightline#ale#warnings',
+  \   'linter_errors': 'lightline#ale#errors',
+  \   'linter_ok': 'lightline#ale#ok',
+  \ }
+let g:lightline.component_type = {
+  \   'linter_checking': 'left',
+  \   'linter_warnings': 'warning',
+  \   'linter_errors': 'error',
+  \   'linter_ok': 'left',
+  \ }
+let g:lightline.active = {
+  \   'left': [
+  \     ['mode', 'paste'],
+  \     ['readonly', 'filename', 'modified'],
+  \     ['linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok'],
+  \   ]
+  \ }
 " 見た目系
 set t_Co=256 " iTerm2など既に256色環境なら無くても良い
 syntax enable " 構文に色を付ける
-
+" インデント
+let g:indent_guides_enable_on_vim_startup = 1
 " 行番号を表示
 set number
 " 現在の行を強調表示
@@ -135,7 +153,7 @@ map <C-l> gt
 map <C-h> gT
 
 " gitgutter
-let g:gitgutter_highlight_lines = 1 
+let g:gitgutter_highlight_lines = 1
 
 augroup GitSpellCheck
     autocmd!
@@ -179,12 +197,14 @@ Plug 'nathanaelkane/vim-indent-guides'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'cohama/lexima.vim'
 Plug 'sonph/onehalf', { 'rtp': 'vim' }
-Plug 'scrooloose/syntastic'
+Plug 'tmhedberg/SimpylFold'
+Plug 'vim-scripts/indentpython.vim'
+Plug 'dense-analysis/ale'
+Plug 'maximbaz/lightline-ale'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 call plug#end()
 
-let g:lightline = {
-      \ 'colorscheme': 'one',
-     \ }
 colorscheme onehalfdark
 let g:airline_theme='onehalfdark'
 " color setting
