@@ -1,5 +1,6 @@
 alias co="code ."
 alias ch="charm ."
+alias ws="open -na 'WebStorm.app' ."
 # Executes commands at the start of an interactive session.
 #
 # Authors:

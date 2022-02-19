@@ -26,6 +26,9 @@ let g:ale_fixers = {
     \ 'python': ['autopep8', 'black', 'isort'],
     \ }
 let g:ale_fix_on_save = 1
+let g:ale_open_list = 1
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
 
 let g:ale_linters = {'python': ['flake8']}
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
@@ -53,6 +56,7 @@ let g:lightline.active = {
   \     ['linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok'],
   \   ]
   \ }
+
 " 見た目系
 set t_Co=256 " iTerm2など既に256色環境なら無くても良い
 syntax enable " 構文に色を付ける
@@ -138,6 +142,8 @@ if &term =~ "xterm"
 endif
 
 " NERDTree
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
@@ -203,6 +209,9 @@ Plug 'dense-analysis/ale'
 Plug 'maximbaz/lightline-ale'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+Plug 'mbbill/undotree'
+Plug 'tpope/vim-surround'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 call plug#end()
 
 colorscheme onehalfdark
