@@ -41,7 +41,7 @@ alias gopen="git open"
 alias t="tig"
 # python
 alias vpy="python3 -m venv venv | source ./venv/bin/activate"
-
+alias python=/usr/bin/python3
 # ghq & peco
 function peco-src () {
   local selected_dir=$(ghq list -p | peco --query "$LBUFFER")
@@ -62,3 +62,4 @@ alias dc="docker-compose"
 # kube ps1
 source <(kubectl completion zsh)
 export PATH=$PATH:/Users/matsukokuumahikari/.cargo/bin
+export WAKATIME_API_KEY=3fbc8f6f-103c-4192-8f22-e65f1b6f13a6
