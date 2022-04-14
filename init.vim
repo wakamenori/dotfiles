@@ -212,6 +212,7 @@ Plug 'honza/vim-snippets'
 Plug 'mbbill/undotree'
 Plug 'tpope/vim-surround'
 Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'artanikin/vim-synthwave84'
 call plug#end()
 
 colorscheme onehalfdark

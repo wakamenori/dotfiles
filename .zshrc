@@ -22,7 +22,7 @@ alias view="nvim -R"
 # History
 export HISTFILE=~/.zsh_history
 export HISTSIZE=100000
-export SAVEHIST=100000
+export SAVEHIST=1000000
 
 setopt no_beep
 setopt auto_pushd
@@ -63,3 +63,35 @@ alias dc="docker-compose"
 source <(kubectl completion zsh)
 export PATH=$PATH:/Users/matsukokuumahikari/.cargo/bin
 export WAKATIME_API_KEY=3fbc8f6f-103c-4192-8f22-e65f1b6f13a6
+
+# peco history
+function peco-history-selection() {
+    BUFFER=$(history 1 | sort -k1,1nr | perl -ne 'BEGIN { my @lines = (); } s/^\s*\d+\*?\s*//; $in=$_; if (!(grep {$in eq $_} @lines)) { push(@lines, $in); print $in; }' | peco --query "$LBUFFER")
+    CURSOR=${#BUFFER}
+    zle reset-prompt
+}
+zle -N peco-history-selection
+bindkey '^R' peco-history-selection
+
+
+zle -N peco-history-selection
+bindkey '^R' peco-history-selection
+
+# cdr
+if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
+    autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+    add-zsh-hook chpwd chpwd_recent_dirs
+    zstyle ':completion:*' recent-dirs-insert both
+    zstyle ':chpwd:*' recent-dirs-default true
+    zstyle ':chpwd:*' recent-dirs-max 1000
+    zstyle ':chpwd:*' recent-dirs-file "$HOME/.cache/chpwd-recent-dirs"
+fi
+function peco-cdr () {
+    local selected_dir="$(cdr -l | sed 's/^[0-9]\+ \+//' | peco --prompt="cdr >" --query "$LBUFFER")"
+    if [ -n "$selected_dir" ]; then
+        BUFFER="cd ${selected_dir}"
+        zle accept-line
+    fi
+}
+zle -N peco-cdr
+bindkey '^E' peco-cdr
