@@ -1,6 +1,6 @@
 alias co="code ."
 alias ch="charm ."
-alias ws="open -na 'WebStorm.app' ."
+alias ws=" ~/shellscripts/webstorm ."
 # Executes commands at the start of an interactive session.
 #
 # Authors:
@@ -18,6 +18,7 @@ fi
 alias vi="nvim"
 alias vim="nvim"
 alias view="nvim -R"
+alias cat="bat"
 
 # History
 export HISTFILE=~/.zsh_history
@@ -74,9 +75,6 @@ zle -N peco-history-selection
 bindkey '^R' peco-history-selection
 
 
-zle -N peco-history-selection
-bindkey '^R' peco-history-selection
-
 # cdr
 if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
     autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
@@ -87,7 +85,7 @@ if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]
     zstyle ':chpwd:*' recent-dirs-file "$HOME/.cache/chpwd-recent-dirs"
 fi
 function peco-cdr () {
-    local selected_dir="$(cdr -l | sed 's/^[0-9]\+ \+//' | peco --prompt="cdr >" --query "$LBUFFER")"
+    local selected_dir="$(cdr -l | awk '{ print $2 }' | peco --prompt="cdr >" --query "$LBUFFER")"
     if [ -n "$selected_dir" ]; then
         BUFFER="cd ${selected_dir}"
         zle accept-line
@@ -95,3 +93,7 @@ function peco-cdr () {
 }
 zle -N peco-cdr
 bindkey '^E' peco-cdr
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'

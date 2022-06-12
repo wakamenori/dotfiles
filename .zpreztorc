@@ -72,7 +72,7 @@ zstyle ':prezto:load' pmodule-dirs $HOME/.zprezto-contrib
 #
 
 # Set the query found color.
-zstyle ':prezto:module:autosuggestions:color' found 'fg=white'  
+zstyle ':prezto:module:autosuggestions:color' found 'fg=white'
 
 #
 # Completions

@@ -3,8 +3,8 @@ set fenc=utf-8
 set nobackup
 set noswapfile
 set nowritebackup
-set autoread
 set hidden
+set showcmd
 set showcmd
 set number
 set shiftwidth=4
@@ -15,47 +15,13 @@ set autoindent
 set clipboard=unnamed
 syntax on
 
+
+let g:python3_host_prog = "~/venv/bin/python3"
+
 " Enable folding
 set foldmethod=indent
 set foldlevel=99
 nnoremap <space> za
-" ale
-let g:python3_host_prog = $HOME . '/venv/bin/python'
-" 各ツールをFixerとして登録
-let g:ale_fixers = {
-    \ 'python': ['autopep8', 'black', 'isort'],
-    \ }
-let g:ale_fix_on_save = 1
-let g:ale_open_list = 1
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 1
-let b:ale_fixers = ['prettier', 'eslint']
-let g:ale_linters = {'python': ['flake8']}
-let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-let g:ale_sign_column_always = 1
-let g:lightline = {
-      \ 'colorscheme': 'one',
-     \ }
-" linelight-ale
-let g:lightline.component_expand = {
-  \   'linter_checking': 'lightline#ale#checking',
-  \   'linter_warnings': 'lightline#ale#warnings',
-  \   'linter_errors': 'lightline#ale#errors',
-  \   'linter_ok': 'lightline#ale#ok',
-  \ }
-let g:lightline.component_type = {
-  \   'linter_checking': 'left',
-  \   'linter_warnings': 'warning',
-  \   'linter_errors': 'error',
-  \   'linter_ok': 'left',
-  \ }
-let g:lightline.active = {
-  \   'left': [
-  \     ['mode', 'paste'],
-  \     ['readonly', 'filename', 'modified'],
-  \     ['linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok'],
-  \   ]
-  \ }
 
 " 見た目系
 set t_Co=256 " iTerm2など既に256色環境なら無くても良い
@@ -65,7 +31,39 @@ let g:indent_guides_enable_on_vim_startup = 1
 " 行番号を表示
 set number
 " 現在の行を強調表示
-set cursorline
+" set cursorline
+
+augroup vimrc-auto-cursorline
+  autocmd!
+  autocmd CursorMoved,CursorMovedI * call s:auto_cursorline('CursorMoved')
+  autocmd CursorHold,CursorHoldI * call s:auto_cursorline('CursorHold')
+  autocmd WinEnter * call s:auto_cursorline('WinEnter')
+  autocmd WinLeave * call s:auto_cursorline('WinLeave')
+
+  let s:cursorline_lock = 0
+  function! s:auto_cursorline(event)
+    if a:event ==# 'WinEnter'
+      setlocal cursorline
+      let s:cursorline_lock = 2
+    elseif a:event ==# 'WinLeave'
+      setlocal nocursorline
+    elseif a:event ==# 'CursorMoved'
+      if s:cursorline_lock
+        if 1 < s:cursorline_lock
+          let s:cursorline_lock = 1
+        else
+          setlocal nocursorline
+          let s:cursorline_lock = 0
+        endif
+      endif
+    elseif a:event ==# 'CursorHold'
+      setlocal cursorline
+      let s:cursorline_lock = 1
+    endif
+  endfunction
+augroup END
+
+
 " 行末の1文字先までカーソルを移動できるように
 set virtualedit=onemore
 " インデントはスマートインデント
@@ -98,6 +96,7 @@ set wrapscan
 set hlsearch
 " ESC連打でハイライト解除
 nmap <Esc><Esc> :nohlsearch<CR><Esc>
+" set nowrap
 
 " Backspaceの影響範囲に制限を設けないようにする
 set backspace=indent,eol,start
@@ -121,8 +120,12 @@ inoremap <silent> jj <ESC>
 
 " autosave
 autocmd FocusLost * silent wa
-" switch pane
 
+" タブ切り替え
+nnoremap <silent> <C-p>   :BufferPrevious<CR>
+nnoremap <silent> <C-n>   :BufferNext<CR>
+
+" switch pane
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
@@ -144,22 +147,38 @@ endif
 " NERDTree
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
-nnoremap <leader>n :NERDTreeFocus<CR>
-nnoremap <C-n> :NERDTree<CR>
-nnoremap <C-t> :NERDTreeToggle<CR>
-nnoremap <C-f> :NERDTreeFind<CR>
+" nnoremap <leader>n :NERDTreeFocus<CR>
+" nnoremap <CBufferPrevious-n> :NERDTree<CR>
+" nnoremap <silent> <Leader>e :NERDTreeToggle<CR>
+" nnoremap <C-f> :NERDTreeFind<CR>
 let NERDTreeShowHidden = 1
 
 " Start NERDTree when Vim is started without file arguments.
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
 
+" FZF
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
+
+" [[B]Commits] Customize the options used by 'git log':
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+
+" [Tags] Command to generate tags file
+let g:fzf_tags_command = 'ctags -R'
+
+" [Commands] --expect expression for directly executing the command
+let g:fzf_commands_expect = 'alt-enter,ctrl-x'
+
+" nnoremap <C-f> :Files<CR>
+" nnoremap <S-f> :Ag<CR>
+
 " タブ移動
-map <C-l> gt
-map <C-h> gT
+" map <C-l> gt
+" map <C-h> gT
 
 " gitgutter
-let g:gitgutter_highlight_lines = 1
+" let g:gitgutter_highlight_lines = 1
 
 augroup GitSpellCheck
     autocmd!
@@ -182,13 +201,31 @@ function! g:committia_hooks.edit_open(info)
     imap <buffer><C-p> <Plug>(committia-scroll-diff-up-half)
 endfunction
 
+" COC https://qiita.com/coil_msp123/items/29de76b035dd28af77a9
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+
 call plug#begin()
 Plug 'preservim/nerdtree'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/rpc' }
 Plug 'sheerun/vim-polyglot'
 Plug 'easymotion/vim-easymotion'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'sjl/vitality.vim'
 Plug 'christoomey/vim-tmux-navigator'
@@ -205,22 +242,151 @@ Plug 'cohama/lexima.vim'
 Plug 'sonph/onehalf', { 'rtp': 'vim' }
 Plug 'tmhedberg/SimpylFold'
 Plug 'vim-scripts/indentpython.vim'
-Plug 'dense-analysis/ale'
-Plug 'maximbaz/lightline-ale'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'mbbill/undotree'
 Plug 'tpope/vim-surround'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'artanikin/vim-synthwave84'
+Plug 'mtdl9/vim-log-highlighting'
+Plug '4513ECHO/vim-colors-hatsunemiku'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'romgrk/barbar.nvim'
+Plug 'ryanoasis/vim-devicons'
+Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'javascript.jsx'] }
+Plug 'othree/yajs.vim', { 'for': ['javascript', 'javascript.jsx'] }
+Plug 'othree/es.next.syntax.vim', { 'for': ['javascript', 'javascript.jsx'] }
+Plug 'othree/javascript-libraries-syntax.vim', { 'for': ['javascript', 'javascript.jsx'] }
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'lambdalisue/fern.vim'
+Plug 'josa42/vim-lightline-coc'
+Plug 'sakshamgupta05/vim-todo-highlight'
 call plug#end()
 
-colorscheme onehalfdark
-let g:airline_theme='onehalfdark'
+colorscheme tokyonight
+let g:airline_theme='tokyonight'
 " color setting
 if exists('+termguicolors')
   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
   set termguicolors
 endif
+
+" https://zenn.dev/yano/articles/vim_frontend_development_2021#nvim-treesitter-(*)
+" map prefix
+let g:mapleader = "\<Space>"
+nnoremap <Leader> <Nop>
+xnoremap <Leader> <Nop>
+nnoremap [dev]    <Nop>
+xnoremap [dev]    <Nop>
+nmap     m        [dev]
+xmap     m        [dev]
+nnoremap [ff]     <Nop>
+xnoremap [ff]     <Nop>
+nmap     z        [ff]
+xmap     z        [ff]
+
+"" coc.nvim
+let g:coc_global_extensions = ['coc-tsserver', 'coc-eslint8',  'coc-git', 'coc-fzf-preview', 'coc-lists' , 'coc-prettier', 'coc-spell-checker', 'coc-highlight', 'coc-emmet', 'coc-diagnostic', 'coc-json', 'coc-jedi', 'coc-yaml', 'coc-react-refactor']
+
+inoremap  <expr> <C-Space> coc#refresh()
+nnoremap <silent> K       :<C-u>call <SID>show_documentation()<CR>
+nmap     <silent> [dev]rn <Plug>(coc-rename)
+nmap     <silent> [dev]a  <Plug>(coc-codeaction-selected)iw
+nmap     <silent> [dev]d  :CocDiagnostics<CR>
+
+function! s:coc_typescript_settings() abort
+  nnoremap <silent> <buffer> [dev]f :<C-u>CocCommand eslint.executeAutofix<CR>:CocCommand prettier.formatFile<CR>
+endfunction
+
+augroup coc_ts
+  autocmd!
+  autocmd FileType typescript,typescriptreact call <SID>coc_typescript_settings()
+augroup END
+
+function! s:show_documentation() abort
+  if index(['vim','help'], &filetype) >= 0
+    execute 'h ' . expand('<cword>')
+  elseif coc#rpc#ready()
+    call CocActionAsync('doHover')
+  endif
+endfunction
+
+"" fzf-preview
+let $BAT_THEME                     = 'OneHalfDark'
+let $FZF_PREVIEW_PREVIEW_BAT_THEME = 'OneHalfDark'
+
+nnoremap <silent> <C-f>  :<C-u>CocCommand fzf-preview.FromResources buffer project_mru project<CR>
+nnoremap <silent> [ff]s  :<C-u>CocCommand fzf-preview.GitStatus<CR>
+nnoremap <silent> [ff]gg :<C-u>CocCommand fzf-preview.GitActions<CR>
+nnoremap <silent> [ff]b  :<C-u>CocCommand fzf-preview.Buffers<CR>
+nnoremap          [ff]f  :<C-u>CocCommand fzf-preview.ProjectGrep --add-fzf-arg=--exact --add-fzf-arg=--no-sort<Space>
+xnoremap          [ff]f  "sy:CocCommand fzf-preview.ProjectGrep --add-fzf-arg=--exact --add-fzf-arg=--no-sort<Space>-F<Space>"<C-r>=substitute(substitute(@s, '\n', '', 'g'), '/', '\\/', 'g')<CR>"
+
+nnoremap <silent> [ff]q  :<C-u>CocCommand fzf-preview.CocCurrentDiagnostics<CR>
+nnoremap <silent> [ff]rf :<C-u>CocCommand fzf-preview.CocReferences<CR>
+nnoremap <silent> [ff]d  :<C-u>CocCommand fzf-preview.CocDefinition<CR>
+nnoremap <silent> [ff]t  :<C-u>CocCommand fzf-preview.CocTypeDefinition<CR>
+nnoremap <silent> [ff]o  :<C-u>CocCommand fzf-preview.CocOutline --add-fzf-arg=--exact --add-fzf-arg=--no-sort<CR>
+
+"" fern
+nnoremap <silent> <Leader>e :NERDTreeToggle<CR>
+nnoremap <silent> <Leader>E :NERDTreeFind<CR>
+
+"" react-refactor
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+"" treesitter
+lua <<EOF
+require('nvim-treesitter.configs').setup {
+  ensure_installed = {
+    "typescript",
+    "tsx",
+  },
+  highlight = {
+    enable = true,
+  },
+}
+EOF
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+
+
+let g:lightline = {
+  \   'colorscheme': 'ayu_mirage'
+  \ }
+
+" register compoments:
+let g:lightline.component_expand = {
+  \   'linter_warnings': 'lightline#coc#warnings',
+  \   'linter_errors': 'lightline#coc#errors',
+  \   'linter_info': 'lightline#coc#info',
+  \   'linter_hints': 'lightline#coc#hints',
+  \   'linter_ok': 'lightline#coc#ok',
+  \   'status': 'lightline#coc#status',
+  \ }
+
+" Set color to the components:
+let g:lightline.component_type = {
+  \   'linter_warnings': 'warning',
+  \   'linter_errors': 'error',
+  \   'linter_info': 'info',
+  \   'linter_hints': 'hints',
+  \   'linter_ok': 'left',
+  \ }
+
+" Add the components to the lightline:
+let g:lightline.active = {
+  \   'left': [[ 'coc_info', 'coc_hints', 'coc_errors', 'coc_warnings', 'coc_ok' ], [ 'coc_status'  ]]
+  \ }
+
+call lightline#coc#register()
 
