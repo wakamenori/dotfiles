@@ -42,7 +42,6 @@ alias gopen="git open"
 alias t="tig"
 # python
 alias vpy="python3 -m venv venv | source ./venv/bin/activate"
-alias python=/usr/bin/python3
 # ghq & peco
 function peco-src () {
   local selected_dir=$(ghq list -p | peco --query "$LBUFFER")

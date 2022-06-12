@@ -15,9 +15,14 @@ set autoindent
 set clipboard=unnamed
 syntax on
 
-
+let g:black_virtualenv = "~/venv/"
 let g:python3_host_prog = "~/venv/bin/python3"
+augroup black_on_save
+  autocmd!
+  autocmd BufWritePre *.py Black
+augroup end
 
+nnoremap <F9> :Black<CR>
 " Enable folding
 set foldmethod=indent
 set foldlevel=99
@@ -262,6 +267,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'lambdalisue/fern.vim'
 Plug 'josa42/vim-lightline-coc'
 Plug 'sakshamgupta05/vim-todo-highlight'
+Plug 'psf/black', { 'branch': 'stable' }
 call plug#end()
 
 colorscheme tokyonight
