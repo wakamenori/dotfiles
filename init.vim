@@ -222,7 +222,6 @@ function! s:show_documentation()
 endfunction
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-
 call plug#begin()
 Plug 'preservim/nerdtree'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -268,8 +267,15 @@ Plug 'lambdalisue/fern.vim'
 Plug 'josa42/vim-lightline-coc'
 Plug 'sakshamgupta05/vim-todo-highlight'
 Plug 'psf/black', { 'branch': 'stable' }
+Plug 'jmcantrell/vim-virtualenv'
+Plug 'luochen1990/rainbow'
 call plug#end()
-
+let g:rainbow_active = 1
+let g:rainbow_conf = {
+	\	'separately': {
+	\		'nerdtree': 0,
+	\	}
+	\}
 colorscheme tokyonight
 let g:airline_theme='tokyonight'
 " color setting

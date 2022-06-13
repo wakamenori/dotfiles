@@ -6,7 +6,9 @@ alias ws=" ~/shellscripts/webstorm ."
 # Authors:
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
-
+export GOPATH=$HOME/go
+export GOBIN=$GOPATH/bin
+export PATH=$PATH:$GOBIN
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
@@ -41,7 +43,7 @@ alias sp="spotify"
 alias gopen="git open"
 alias t="tig"
 # python
-alias vpy="python3 -m venv venv | source ./venv/bin/activate"
+alias vpy="python3 -m venv venv ; source ./venv/bin/activate"
 # ghq & peco
 function peco-src () {
   local selected_dir=$(ghq list -p | peco --query "$LBUFFER")
