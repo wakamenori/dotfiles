@@ -269,7 +269,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'lambdalisue/fern.vim'
 Plug 'josa42/vim-lightline-coc'
 Plug 'sakshamgupta05/vim-todo-highlight'
-Plug 'psf/black', { 'branch': 'stable' }
+Plug 'psf/black'
 Plug 'jmcantrell/vim-virtualenv'
 Plug 'luochen1990/rainbow'
 Plug 'osyo-manga/vim-anzu'
@@ -279,14 +279,17 @@ Plug 'rcarriga/nvim-notify'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'antoinemadec/FixCursorHold.nvim'
-Plug 'nvim-neotest/neotest'
 Plug 'stevearc/dressing.nvim'
 Plug 'toppair/reach.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'RRethy/vim-illuminate'
 Plug 'numToStr/Comment.nvim'
 Plug 'voldikss/vim-floaterm'
+Plug 'nvim-neotest/neotest'
 Plug 'nvim-neotest/neotest-python'
+Plug 'nvim-neotest/neotest-plenary'
+Plug 'nvim-neotest/neotest-vim-test'
+Plug 'vim-test/vim-test'
 Plug 'mfussenegger/nvim-dap'
 Plug 'mfussenegger/nvim-dap-python'
 Plug 'tanvirtin/vgit.nvim'
@@ -306,28 +309,17 @@ require'nvim-treesitter.configs'.setup {
   }
 }
 EOF
-" lua <<EOF
-" require("neotest").setup({
-"   adapters = {
-"     require("neotest-python")({
-"         -- Extra arguments for nvim-dap configuration
-"         dap = { justMyCode = false },
-"         -- Command line arguments for runner
-"         -- Can also be a function to return dynamic values
-"         args = {"--log-level", "DEBUG"},
-"         -- Runner to use. Will use pytest if available by default.
-"         -- Can be a function to return dynamic value.
-"         runner = "pytest",
-"     })
-"   }
-" })
-" EOF
-" neotest
 lua <<EOF
 require("neotest").setup({
   adapters = {
-    require("neotest-python")
-  }
+    require("neotest-python")({
+      dap = { justMyCode = false },
+    }),
+    require("neotest-plenary"),
+    require("neotest-vim-test")({
+      ignore_file_types = { "python", "vim", "lua" },
+    }),
+  },
 })
 EOF
 " anzu
