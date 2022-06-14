@@ -98,9 +98,9 @@ set incsearch
 " 検索時に最後まで行ったら最初に戻る
 set wrapscan
 " 検索語をハイライト表示
-set hlsearch
+" set hlsearch
 " ESC連打でハイライト解除
-nmap <Esc><Esc> :nohlsearch<CR><Esc>
+" nmap <Esc><Esc> :nohlsearch<CR><Esc>
 " set nowrap
 
 " Backspaceの影響範囲に制限を設けないようにする
@@ -176,14 +176,18 @@ let g:fzf_tags_command = 'ctags -R'
 let g:fzf_commands_expect = 'alt-enter,ctrl-x'
 
 " nnoremap <C-f> :Files<CR>
-" nnoremap <S-f> :Ag<CR>
 
 " タブ移動
 " map <C-l> gt
 " map <C-h> gT
 
-" gitgutter
-" let g:gitgutter_highlight_lines = 1
+highlight SignColumn ctermbg=brown
+
+" GHQ fzf
+command! -nargs=0 Fq call fzf#run({
+\ 'source': 'ghq list --full-path',
+\ 'sink': 'cd'
+\ })
 
 augroup GitSpellCheck
     autocmd!
@@ -234,7 +238,6 @@ Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'sjl/vitality.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'simeji/winresizer'
-Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'wakatime/vim-wakatime'
 Plug 'echasnovski/mini.nvim', { 'branch': 'stable' }
@@ -269,7 +272,74 @@ Plug 'sakshamgupta05/vim-todo-highlight'
 Plug 'psf/black', { 'branch': 'stable' }
 Plug 'jmcantrell/vim-virtualenv'
 Plug 'luochen1990/rainbow'
+Plug 'osyo-manga/vim-anzu'
+Plug 'tpope/vim-endwise'
+Plug 'norcalli/nvim-colorizer.lua'
+Plug 'rcarriga/nvim-notify'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'antoinemadec/FixCursorHold.nvim'
+Plug 'nvim-neotest/neotest'
+Plug 'stevearc/dressing.nvim'
+Plug 'toppair/reach.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'RRethy/vim-illuminate'
+Plug 'numToStr/Comment.nvim'
+Plug 'voldikss/vim-floaterm'
+Plug 'nvim-neotest/neotest-python'
+Plug 'mfussenegger/nvim-dap'
+Plug 'mfussenegger/nvim-dap-python'
+Plug 'tanvirtin/vgit.nvim'
+Plug 'sindrets/diffview.nvim'
+Plug 'kdheepak/lazygit.nvim'
+Plug 'preservim/tagbar'
 call plug#end()
+lua require('Comment').setup()
+
+lua require('vgit').setup()
+set statusline+=%{get(b:,'vgit_status','')}
+
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,
+  }
+}
+EOF
+" lua <<EOF
+" require("neotest").setup({
+"   adapters = {
+"     require("neotest-python")({
+"         -- Extra arguments for nvim-dap configuration
+"         dap = { justMyCode = false },
+"         -- Command line arguments for runner
+"         -- Can also be a function to return dynamic values
+"         args = {"--log-level", "DEBUG"},
+"         -- Runner to use. Will use pytest if available by default.
+"         -- Can be a function to return dynamic value.
+"         runner = "pytest",
+"     })
+"   }
+" })
+" EOF
+" neotest
+lua <<EOF
+require("neotest").setup({
+  adapters = {
+    require("neotest-python")
+  }
+})
+EOF
+" anzu
+nmap n <Plug>(anzu-n-with-echo)
+nmap N <Plug>(anzu-N-with-echo)
+nmap * <Plug>(anzu-star-with-echo)
+nmap # <Plug>(anzu-sharp-with-echo)
+" clear status
+nmap <Esc><Esc> <Plug>(anzu-clear-search-status) :nohlsearch<CR><Esc>
+" statusline
+set statusline=%{anzu#search_status()}
+
 let g:rainbow_active = 1
 let g:rainbow_conf = {
 	\	'separately': {
@@ -298,7 +368,7 @@ nnoremap [ff]     <Nop>
 xnoremap [ff]     <Nop>
 nmap     z        [ff]
 xmap     z        [ff]
-
+nmap <Leader>t :TagbarToggle<CR>
 "" coc.nvim
 let g:coc_global_extensions = ['coc-tsserver', 'coc-eslint8',  'coc-git', 'coc-fzf-preview', 'coc-lists' , 'coc-prettier', 'coc-spell-checker', 'coc-highlight', 'coc-emmet', 'coc-diagnostic', 'coc-json', 'coc-jedi', 'coc-yaml', 'coc-react-refactor']
 
@@ -309,7 +379,7 @@ nmap     <silent> [dev]a  <Plug>(coc-codeaction-selected)iw
 nmap     <silent> [dev]d  :CocDiagnostics<CR>
 
 function! s:coc_typescript_settings() abort
-  nnoremap <silent> <buffer> [dev]f :<C-u>CocCommand eslint.executeAutofix<CR>:CocCommand prettier.formatFile<CR>
+  nnoremap <silent> <buffer> [dev]f <Plug>(coc-format-selected):<C-u>CocCommand eslint.executeAutofix<CR>:CocCommand prettier.formatFile<CR>
 endfunction
 
 augroup coc_ts
