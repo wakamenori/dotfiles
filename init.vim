@@ -334,6 +334,8 @@ Plug 'shaunsingh/moonlight.nvim'
 Plug 'navarasu/onedark.nvim'
 Plug 'rose-pine/neovim'
 Plug 'nxvu699134/vn-night.nvim'
+Plug 'sindrets/diffview.nvim'
+Plug 'junegunn/goyo.vim'
 if has('nvim')
   function! UpdateRemotePlugins(...)
     " Needed to refresh runtime files
@@ -351,6 +353,8 @@ else
 endif
 Plug 'romgrk/fzy-lua-native'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'tpope/vim-repeat'
+Plug 'mbbill/undotree'
 call plug#end()
 lua require('Comment').setup()
 
@@ -570,6 +574,9 @@ nmap [dev]tc :lua require("neotest").run.run(vim.fn.expand("%"))<CR>
 nmap [dev]to :lua require("neotest").summary.open()<CR>
 
 set termguicolors
+
+" undo
+nnoremap <Leader>u :UndotreeToggle<cr>
 
 " coc.nvim
 let g:coc_global_extensions = ['coc-tsserver', 'coc-eslint8', 'coc-fzf-preview', 'coc-lists' , 'coc-prettier', 'coc-spell-checker', 'coc-highlight', 'coc-emmet', 'coc-diagnostic', 'coc-json', 'coc-jedi', 'coc-yaml', 'coc-react-refactor']
