@@ -258,17 +258,6 @@ require('bufferline').setup{options={
 EOF
 endfunction
 
-" gitgutter
-let g:gitgutter_highlight_lines = 1
-let g:gitgutter_sign_added = '┃'
-let g:gitgutter_sign_modified = '┃'
-let g:gitgutter_sign_removed = '┃'
-let g:gitgutter_sign_removed_first_line = '┃'
-let g:gitgutter_sign_modified_removed = '┃'
-let g:gitgutter_realtime = 0
-let g:gitgutter_eager = 0
-let g:gitgutter_terminal_reports_focus=0
-
 
 call plug#begin()
 Plug 'preservim/nerdtree'
@@ -312,7 +301,7 @@ Plug 'othree/javascript-libraries-syntax.vim', { 'for': ['javascript', 'javascri
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'lambdalisue/fern.vim'
 Plug 'josa42/vim-lightline-coc'
-Plug 'sakshamgupta05/vim-todo-highlight'
+Plug 'folke/todo-comments.nvim'
 Plug 'psf/black'
 Plug 'jmcantrell/vim-virtualenv'
 Plug 'luochen1990/rainbow'
@@ -326,7 +315,7 @@ Plug 'antoinemadec/FixCursorHold.nvim'
 Plug 'stevearc/dressing.nvim'
 Plug 'toppair/reach.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'RRethy/vim-illuminate'
+" Plug 'RRethy/vim-illuminate'
 Plug 'numToStr/Comment.nvim'
 Plug 'voldikss/vim-floaterm'
 Plug 'nvim-neotest/neotest'
@@ -364,6 +353,29 @@ endif
 Plug 'romgrk/fzy-lua-native'
 call plug#end()
 lua require('Comment').setup()
+
+
+" gitgutter
+let g:gitgutter_highlight_linenrs = 1
+let g:gitgutter_sign_added = '┃'
+let g:gitgutter_sign_modified = '┃'
+let g:gitgutter_sign_removed = '┃'
+let g:gitgutter_sign_removed_first_line = '┃'
+let g:gitgutter_sign_modified_removed = '┃'
+" let g:gitgutter_realtime = 1
+" let g:gitgutter_eager = 0
+" let g:gitgutter_terminal_reports_focus=0
+highlight link GitGutterAddLineNr DiffAdd
+highlight link GitGutterChangeLineNr DiffChange
+highlight link GitGutterDeleteLineNr DiffDelete
+highlight link GitGutterChangeDeleteLineNr GitGutterChangeLineDefault
+
+" TODO:
+" folke/todo-comments
+lua << EOF
+  require("todo-comments").setup{}
+EOF
+
 
 " gelguy/wilder.nvim
 call wilder#setup({'modes': [':', '/', '?']})
@@ -468,7 +480,7 @@ autosave.setup(
       write_all_buffers = false,
       on_off_commands = true,
       clean_command_line_interval = 0,
-      debounce_delay = 135
+      debounce_delay = 270
   }
 )
 EOF
