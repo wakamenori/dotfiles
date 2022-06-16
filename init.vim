@@ -315,7 +315,7 @@ Plug 'antoinemadec/FixCursorHold.nvim'
 Plug 'stevearc/dressing.nvim'
 Plug 'toppair/reach.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-" Plug 'RRethy/vim-illuminate'
+Plug 'RRethy/vim-illuminate'
 Plug 'numToStr/Comment.nvim'
 Plug 'voldikss/vim-floaterm'
 Plug 'nvim-neotest/neotest'
@@ -325,7 +325,7 @@ Plug 'nvim-neotest/neotest-vim-test'
 Plug 'vim-test/vim-test'
 Plug 'mfussenegger/nvim-dap'
 Plug 'mfussenegger/nvim-dap-python'
-Plug 'airblade/vim-gitgutter'
+Plug 'lewis6991/gitsigns.nvim'
 Plug 'sindrets/diffview.nvim'
 Plug 'kdheepak/lazygit.nvim'
 Plug 'preservim/tagbar'
@@ -334,7 +334,6 @@ Plug 'shaunsingh/moonlight.nvim'
 Plug 'navarasu/onedark.nvim'
 Plug 'rose-pine/neovim'
 Plug 'nxvu699134/vn-night.nvim'
-Plug 'nixprime/cpsm'
 if has('nvim')
   function! UpdateRemotePlugins(...)
     " Needed to refresh runtime files
@@ -351,25 +350,54 @@ else
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
 Plug 'romgrk/fzy-lua-native'
+Plug 'nvim-telescope/telescope.nvim'
 call plug#end()
 lua require('Comment').setup()
 
+lua << EOF
+require('gitsigns').setup {
+  signs = {
+    add          = {hl = 'GitSignsAdd'   , text = '┃', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
+    change       = {hl = 'GitSignsChange', text = '┃', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+    delete       = {hl = 'GitSignsDelete', text = '_', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+    topdelete    = {hl = 'GitSignsDelete', text = '‾', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+    changedelete = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+    },
+  signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
+  numhl      = true, -- Toggle with `:Gitsigns toggle_numhl`
+  linehl     = false, -- Toggle with `:Gitsigns toggle_linehl`
+  word_diff  = false, -- Toggle with `:Gitsigns toggle_word_diff`
+  watch_gitdir = {
+    interval = 1000,
+    follow_files = true
+  },
+  attach_to_untracked = true,
+  current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+  current_line_blame_opts = {
+    virt_text = true,
+    virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+    delay = 1000,
+    ignore_whitespace = false,
+  },
+  current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
+  sign_priority = 6,
+  update_debounce = 100,
+  status_formatter = nil, -- Use default
+  max_file_length = 40000,
+  preview_config = {
+    -- Options passed to nvim_open_win
+    border = 'single',
+    style = 'minimal',
+    relative = 'cursor',
+    row = 0,
+    col = 1
+  },
+  yadm = {
+    enable = false
+  },
+}
+EOF
 
-" gitgutter
-let g:gitgutter_highlight_linenrs = 1
-let g:gitgutter_sign_added = '┃'
-let g:gitgutter_sign_modified = '┃'
-let g:gitgutter_sign_removed = '┃'
-let g:gitgutter_sign_removed_first_line = '┃'
-let g:gitgutter_sign_modified_removed = '┃'
-let g:gitgutter_realtime = 1
-let g:gitgutter_eager = 0
-let g:gitgutter_terminal_reports_focus=0
-let g:gitgutter_async=0
-highlight link GitGutterAddLineNr DiffAdd
-highlight link GitGutterChangeLineNr DiffChange
-highlight link GitGutterDeleteLineNr DiffDelete
-highlight link GitGutterChangeDeleteLineNr GitGutterChangeLineDefault
 
 " folke/todo-comments
 lua << EOF
@@ -378,74 +406,86 @@ EOF
 
 
 " gelguy/wilder.nvim
-call wilder#setup({'modes': [':', '/', '?']})
+lua << EOF
+local wilder = require('wilder')
+wilder.setup({modes = {':', '/', '?'}})
 
-call wilder#set_option('pipeline', [
-      \   wilder#branch(
-      \     wilder#python_file_finder_pipeline({
-      \       'file_command': {_, arg -> stridx(arg, '.') != -1 ? ['fd', '-tf', '-H'] : ['fd', '-tf']},
-      \       'dir_command': ['fd', '-td'],
-      \       'filters': ['cpsm_filter'],
-      \     }),
-      \     wilder#substitute_pipeline({
-      \       'pipeline': wilder#python_search_pipeline({
-      \         'skip_cmdtype_check': 1,
-      \         'pattern': wilder#python_fuzzy_pattern({
-      \           'start_at_boundary': 0,
-      \         }),
-      \       }),
-      \     }),
-      \     wilder#cmdline_pipeline({
-      \       'fuzzy': 2,
-      \       'fuzzy_filter': has('nvim') ? wilder#lua_fzy_filter() : wilder#vim_fuzzy_filter(),
-      \     }),
-      \     [
-      \       wilder#check({_, x -> empty(x)}),
-      \       wilder#history(),
-      \     ],
-      \     wilder#python_search_pipeline({
-      \       'pattern': wilder#python_fuzzy_pattern({
-      \         'start_at_boundary': 0,
-      \       }),
-      \     }),
-      \   ),
-      \ ])
+wilder.set_option('pipeline', {
+  wilder.branch(
+    wilder.python_file_finder_pipeline({
+      file_command = function(ctx, arg)
+        if string.find(arg, '.') ~= nil then
+          return {'fdfind', '-tf', '-H'}
+        else
+          return {'fdfind', '-tf'}
+        end
+      end,
+      dir_command = {'fd', '-td'},
+      filters = {'cpsm_filter'},
+    }),
+    wilder.substitute_pipeline({
+      pipeline = wilder.python_search_pipeline({
+        skip_cmdtype_check = 1,
+        pattern = wilder.python_fuzzy_pattern({
+          start_at_boundary = 0,
+        }),
+      }),
+    }),
+    wilder.cmdline_pipeline({
+      fuzzy = 2,
+      fuzzy_filter = wilder.lua_fzy_filter(),
+    }),
+    {
+      wilder.check(function(ctx, x) return x == '' end),
+      wilder.history(),
+    },
+    wilder.python_search_pipeline({
+      pattern = wilder.python_fuzzy_pattern({
+        start_at_boundary = 0,
+      }),
+    })
+  ),
+})
 
-let s:highlighters = [
-      \ wilder#pcre2_highlighter(),
-      \ has('nvim') ? wilder#lua_fzy_highlighter() : wilder#cpsm_highlighter(),
-      \ ]
+local highlighters = {
+  wilder.pcre2_highlighter(),
+  wilder.lua_fzy_highlighter(),
+}
 
-let s:popupmenu_renderer = wilder#popupmenu_renderer(wilder#popupmenu_border_theme({
-      \ 'border': 'rounded',
-      \ 'empty_message': wilder#popupmenu_empty_message_with_spinner(),
-      \ 'highlighter': s:highlighters,
-      \ 'left': [
-      \   ' ',
-      \   wilder#popupmenu_devicons(),
-      \   wilder#popupmenu_buffer_flags({
-      \     'flags': ' a + ',
-      \     'icons': {'+': '', 'a': '', 'h': ''},
-      \   }),
-      \ ],
-      \ 'right': [
-      \   ' ',
-      \   wilder#popupmenu_scrollbar(),
-      \ ],
-      \ }))
+local popupmenu_renderer = wilder.popupmenu_renderer(
+  wilder.popupmenu_border_theme({
+    border = 'rounded',
+    empty_message = wilder.popupmenu_empty_message_with_spinner(),
+    highlighter = highlighters,
+    left = {
+      ' ',
+      wilder.popupmenu_devicons(),
+      wilder.popupmenu_buffer_flags({
+        flags = ' a + ',
+        icons = {['+'] = '', a = '', h = ''},
+      }),
+    },
+    right = {
+      ' ',
+      wilder.popupmenu_scrollbar(),
+    },
+  })
+)
 
-let s:wildmenu_renderer = wilder#wildmenu_renderer({
-      \ 'highlighter': s:highlighters,
-      \ 'separator': ' · ',
-      \ 'left': [' ', wilder#wildmenu_spinner(), ' '],
-      \ 'right': [' ', wilder#wildmenu_index()],
-      \ })
+local wildmenu_renderer = wilder.wildmenu_renderer({
+  highlighter = highlighters,
+  separator = ' · ',
+  left = {' ', wilder.wildmenu_spinner(), ' '},
+  right = {' ', wilder.wildmenu_index()},
+})
 
-call wilder#set_option('renderer', wilder#renderer_mux({
-      \ ':': s:popupmenu_renderer,
-      \ '/': s:wildmenu_renderer,
-      \ 'substitute': s:wildmenu_renderer,
-      \ }))
+wilder.set_option('renderer', wilder.renderer_mux({
+  [':'] = popupmenu_renderer,
+  ['/'] = wildmenu_renderer,
+  substitute = wildmenu_renderer,
+}))
+EOF
+
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
   highlight = {
@@ -480,7 +520,7 @@ autosave.setup(
       write_all_buffers = false,
       on_off_commands = true,
       clean_command_line_interval = 0,
-      debounce_delay = 270
+      debounce_delay = 500
   }
 )
 EOF
@@ -532,7 +572,7 @@ nmap [dev]to :lua require("neotest").summary.open()<CR>
 set termguicolors
 
 " coc.nvim
-let g:coc_global_extensions = ['coc-tsserver', 'coc-eslint8',  'coc-git', 'coc-fzf-preview', 'coc-lists' , 'coc-prettier', 'coc-spell-checker', 'coc-highlight', 'coc-emmet', 'coc-diagnostic', 'coc-json', 'coc-jedi', 'coc-yaml', 'coc-react-refactor']
+let g:coc_global_extensions = ['coc-tsserver', 'coc-eslint8', 'coc-fzf-preview', 'coc-lists' , 'coc-prettier', 'coc-spell-checker', 'coc-highlight', 'coc-emmet', 'coc-diagnostic', 'coc-json', 'coc-jedi', 'coc-yaml', 'coc-react-refactor']
 
 inoremap  <expr> <C-Space> coc#refresh()
 nnoremap <silent> K       :<C-u>call <SID>show_documentation()<CR>
@@ -584,13 +624,13 @@ nmap <leader>a  <Plug>(coc-codeaction-selected)
 "" treesitter
 lua <<EOF
 require('nvim-treesitter.configs').setup {
-ensure_installed = {
-  "typescript",
-  "tsx",
-},
-highlight = {
-  enable = true,
-},
+  ensure_installed = {
+    "typescript",
+    "tsx",
+  },
+  highlight = {
+    enable = true,
+  },
 }
 EOF
 function! s:check_back_space() abort
