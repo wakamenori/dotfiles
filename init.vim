@@ -362,15 +362,15 @@ let g:gitgutter_sign_modified = '┃'
 let g:gitgutter_sign_removed = '┃'
 let g:gitgutter_sign_removed_first_line = '┃'
 let g:gitgutter_sign_modified_removed = '┃'
-" let g:gitgutter_realtime = 1
-" let g:gitgutter_eager = 0
-" let g:gitgutter_terminal_reports_focus=0
+let g:gitgutter_realtime = 1
+let g:gitgutter_eager = 0
+let g:gitgutter_terminal_reports_focus=0
+let g:gitgutter_async=0
 highlight link GitGutterAddLineNr DiffAdd
 highlight link GitGutterChangeLineNr DiffChange
 highlight link GitGutterDeleteLineNr DiffDelete
 highlight link GitGutterChangeDeleteLineNr GitGutterChangeLineDefault
 
-" TODO:
 " folke/todo-comments
 lua << EOF
   require("todo-comments").setup{}
