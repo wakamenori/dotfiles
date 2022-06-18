@@ -5,7 +5,6 @@ set noswapfile
 set nowritebackup
 set hidden
 set showcmd
-set showcmd
 set number relativenumber
 set shiftwidth=4
 set tabstop=4
@@ -125,10 +124,6 @@ inoremap <silent> jj <ESC>
 " autosave
 autocmd FocusLost * silent wa
 
-" タブ切り替え
-nnoremap <silent> <C-p>   :BufferPrevious<CR>
-nnoremap <silent> <C-n>   :BufferNext<CR>
-
 " These commands will navigate through buffers in order regardless of which mode you are using
 " e.g. if you change the order of buffers :bnext and :bprevious will not respect the custom ordering
 nnoremap <silent> <C-n> :BufferLineCycleNext<CR>
@@ -141,7 +136,6 @@ nnoremap <silent><C-a> :BufferLineMovePrev<CR>
 " These commands will sort buffers by directory, language, or a custom criteria
 nnoremap <silent>be :BufferLineSortByExtension<CR>
 nnoremap <silent>bd :BufferLineSortByDirectory<CR>
-set updatetime=100
 " switch pane
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
@@ -192,6 +186,9 @@ let g:fzf_commands_expect = 'alt-enter,ctrl-x'
 " タブ移動
 " map <C-l> gt
 " map <C-h> gT
+let g:move_key_modifier = 'S'
+let g:move_key_modifier_visualmode = 'S'
+
 
 highlight SignColumn ctermbg=brown
 
@@ -281,8 +278,8 @@ Plug 'bronson/vim-trailing-whitespace'
 Plug 'cohama/lexima.vim'
 Plug 'sonph/onehalf', { 'rtp': 'vim' }
 Plug 'tmhedberg/SimpylFold'
-Plug 'vim-scripts/indentpython.vim'
 Plug 'SirVer/ultisnips'
+Plug 'vim-scripts/indentpython.vim'
 Plug 'honza/vim-snippets'
 Plug 'mbbill/undotree'
 Plug 'tpope/vim-surround'
@@ -336,6 +333,7 @@ Plug 'rose-pine/neovim'
 Plug 'nxvu699134/vn-night.nvim'
 Plug 'sindrets/diffview.nvim'
 Plug 'junegunn/goyo.vim'
+Plug 'phaazon/hop.nvim'
 if has('nvim')
   function! UpdateRemotePlugins(...)
     " Needed to refresh runtime files
@@ -355,9 +353,26 @@ Plug 'romgrk/fzy-lua-native'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'tpope/vim-repeat'
 Plug 'mbbill/undotree'
+" Plug 'ervandew/supertab'
+Plug 'matze/vim-move'
+Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' }
+Plug 'rebelot/kanagawa.nvim'
 call plug#end()
-lua require('Comment').setup()
 
+
+nmap <silent> <C-_> <Plug>(pydocstring)
+let g:Illuminate_ftblacklist = ['nerdtree']
+
+" phaazon/hop.nvim
+lua require("hop").setup{}
+
+" let g:SuperTabDefaultCompletionType = "<c-n>"
+" set completeopt=menuone,noinsert
+" " 補完表示時のEnterで改行をしない
+" inoremap <expr><CR>  pumvisible() ? "<C-y>" : "<CR>"
+
+" inoremap <expr><C-n> pumvisible() ? "<Down>" : "<C-n>"
+" inoremap <expr><C-p> pumvisible() ? "<Up>" : "<C-p>"
 lua << EOF
 require('gitsigns').setup {
   signs = {
@@ -380,7 +395,7 @@ require('gitsigns').setup {
   current_line_blame_opts = {
     virt_text = true,
     virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
-    delay = 1000,
+    delay = 500,
     ignore_whitespace = false,
   },
   current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
@@ -524,7 +539,7 @@ autosave.setup(
       write_all_buffers = false,
       on_off_commands = true,
       clean_command_line_interval = 0,
-      debounce_delay = 500
+      debounce_delay = 1000
   }
 )
 EOF
@@ -596,6 +611,20 @@ autocmd!
 autocmd FileType typescript,typescriptreact call <SID>coc_typescript_settings()
 augroup END
 
+
+"" coc.nvim
+imap <C-ENTER> <Plug>(coc-snippets-expand)
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 function! s:show_documentation() abort
 if index(['vim','help'], &filetype) >= 0
   execute 'h ' . expand('<cword>')
@@ -640,22 +669,25 @@ require('nvim-treesitter.configs').setup {
   },
 }
 EOF
-function! s:check_back_space() abort
-let col = col('.') - 1
-return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
 
-inoremap <silent><expr> <Tab>
-    \ pumvisible() ? "\<C-n>" :
-    \ <SID>check_back_space() ? "\<Tab>" :
-    \ coc#refresh()
-
-
+set noshowmode
 let g:lightline = {
-\   'colorscheme': 'ayu_mirage'
+\   'colorscheme': 'tokyonight',
+      \ 'component_function': {
+      \   'filename': 'LightlineFilename',
+      \ },
 \ }
 
-" register compoments:
+" Show full path of filename
+function! LightlineFilename()
+  let root = fnamemodify(get(b:, 'git_dir'), ':h')
+  let path = expand('%:p')
+  if path[:len(root)-1] ==# root
+    return path[len(root)+1:]
+  endif
+  return expand('%')
+endfunction
+
 let g:lightline.component_expand = {
 \   'linter_warnings': 'lightline#coc#warnings',
 \   'linter_errors': 'lightline#coc#errors',
@@ -676,7 +708,7 @@ let g:lightline.component_type = {
 
 " Add the components to the lightline:
 let g:lightline.active = {
-\   'left': [[ 'coc_info', 'coc_hints', 'coc_errors', 'coc_warnings', 'coc_ok' ], [ 'coc_status'  ]]
+\   'left': [[ 'coc_info', 'coc_hints', 'coc_errors', 'coc_warnings', 'coc_ok' ], [ 'coc_status', 'filename']]
 \ }
 
 call lightline#coc#register()
