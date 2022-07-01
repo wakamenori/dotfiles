@@ -1,3 +1,4 @@
+set cmdheight=0
 set mouse=a
 set fenc=utf-8
 set nobackup
@@ -5,7 +6,7 @@ set noswapfile
 set nowritebackup
 set hidden
 set showcmd
-set number relativenumber
+set number
 set shiftwidth=4
 set tabstop=4
 set expandtab
@@ -158,6 +159,7 @@ endif
 " NERDTree
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
+let NERDTreeHighlightCursorline = 0
 " nnoremap <leader>n :NERDTreeFocus<CR>
 " nnoremap <CBufferPrevious-n> :NERDTree<CR>
 " nnoremap <silent> <Leader>e :NERDTreeToggle<CR>
@@ -177,17 +179,17 @@ let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %
 
 " [Tags] Command to generate tags file
 let g:fzf_tags_command = 'ctags -R'
+let g:fzf_commands_expect = 'alt-enter,ctrl-x'
 
 " [Commands] --expect expression for directly executing the command
-let g:fzf_commands_expect = 'alt-enter,ctrl-x'
 
 " nnoremap <C-f> :Files<CR>
 
 " タブ移動
 " map <C-l> gt
 " map <C-h> gT
-let g:move_key_modifier = 'S'
-let g:move_key_modifier_visualmode = 'S'
+let g:move_key_modifier = 'A'
+let g:move_key_modifier_visualmode = 'A'
 
 
 highlight SignColumn ctermbg=brown
@@ -245,7 +247,7 @@ require('bufferline').setup{options={
   local s = " "
   for e, n in pairs(diagnostics_dict) do
     local sym = e == "error" and " "
-      or (e == "warning" and " " or "" )
+    or (e == "warning" and " " or "" )
     s = s .. n .. sym
   end
   return s
@@ -272,7 +274,6 @@ Plug 'tpope/vim-fugitive'
 Plug 'wakatime/vim-wakatime'
 Plug 'echasnovski/mini.nvim', { 'branch': 'stable' }
 Plug 'rhysd/committia.vim'
-Plug 'itchyny/lightline.vim'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'cohama/lexima.vim'
@@ -329,6 +330,7 @@ Plug 'preservim/tagbar'
 Plug 'Pocco81/AutoSave.nvim'
 Plug 'shaunsingh/moonlight.nvim'
 Plug 'navarasu/onedark.nvim'
+Plug 'olimorris/onedarkpro.nvim'
 Plug 'rose-pine/neovim'
 Plug 'nxvu699134/vn-night.nvim'
 Plug 'sindrets/diffview.nvim'
@@ -353,12 +355,47 @@ Plug 'romgrk/fzy-lua-native'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'tpope/vim-repeat'
 Plug 'mbbill/undotree'
-" Plug 'ervandew/supertab'
 Plug 'matze/vim-move'
 Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' }
 Plug 'rebelot/kanagawa.nvim'
+Plug 'weilbith/nvim-code-action-menu'
+" Plug 'vimpostor/vim-tpipeline'
+Plug 'nvim-lua/popup.nvim'
+Plug 'MunifTanjim/nui.nvim'
+Plug 'wthollingsworth/pomodoro.nvim'
+Plug 'mkropat/vim-tt'
+Plug 'ziontee113/icon-picker.nvim'
+Plug 'nvim-lualine/lualine.nvim'
+Plug 'pappasam/coc-jedi', { 'do': 'yarn install --frozen-lockfile && yarn build', 'branch': 'main' }
+Plug 'tmux-plugins/vim-tmux'
+Plug 'github/copilot.vim'
+Plug 'folke/lsp-colors.nvim'
+Plug 'ghillb/cybu.nvim'
+Plug 'vim-jp/vimdoc-ja'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
+Plug 'petertriho/nvim-scrollbar'
+Plug 'mrjones2014/legendary.nvim'
+Plug 'dhruvasagar/vim-table-mode'
+Plug 'jsborjesson/vim-uppercase-sql'
 call plug#end()
 
+" lspcolor
+lua << EOF
+require("lsp-colors").setup({
+  Error = "#db4b4b",
+  Warning = "#e0af68",
+  Information = "#0db9d7",
+  Hint = "#10B981"
+})
+EOF
+
+lua << EOF
+require("cybu").setup()
+vim.keymap.set("n", "[b", "<Plug>(CybuPrev)")
+vim.keymap.set("n", "]b", "<Plug>(CybuNext)")
+vim.keymap.set("n", "<c-s-tab>", "<plug>(CybuLastusedPrev)")
+vim.keymap.set("n", "<c-tab>", "<plug>(CybuLastusedNext)")
+EOF
 
 nmap <silent> <C-_> <Plug>(pydocstring)
 let g:Illuminate_ftblacklist = ['nerdtree']
@@ -366,13 +403,18 @@ let g:Illuminate_ftblacklist = ['nerdtree']
 " phaazon/hop.nvim
 lua require("hop").setup{}
 
-" let g:SuperTabDefaultCompletionType = "<c-n>"
-" set completeopt=menuone,noinsert
-" " 補完表示時のEnterで改行をしない
-" inoremap <expr><CR>  pumvisible() ? "<C-y>" : "<CR>"
+lua require("icon-picker")
 
-" inoremap <expr><C-n> pumvisible() ? "<Down>" : "<C-n>"
-" inoremap <expr><C-p> pumvisible() ? "<Up>" : "<C-p>"
+" lua << EOF
+" local opts = { noremap = true, silent = true }
+" vim.keymap.set("i", "<C-i>", "<cmd>PickIconsInsert<cr>", opts)
+" vim.keymap.set("n", "<Leader><Leader>i", "<cmd>PickIcons<cr>", opts)
+" EOF
+
+lua << EOF
+require("scrollbar").setup()
+EOF
+
 lua << EOF
 require('gitsigns').setup {
   signs = {
@@ -550,9 +592,8 @@ nmap N <Plug>(anzu-N-with-echo)
 nmap * <Plug>(anzu-star-with-echo)
 nmap # <Plug>(anzu-sharp-with-echo)
 " clear status
-nmap <silent> <Esc><Esc> <Plug>(anzu-clear-search-status) :nohlsearch<CR><Esc>
-" statusline
-set statusline=%{anzu#search_status()}
+nmap <silent> <Esc><Esc> <Plug>(anzu-clear-search-status) :set nohlsearch<CR><ESC>
+" :nohlsearch<CR><ESC>
 
 let g:rainbow_active = 1
 let g:rainbow_conf = {
@@ -560,8 +601,10 @@ let g:rainbow_conf = {
   \		'nerdtree': 0,
   \	}
   \}
-colorscheme tokyonight
-let g:airline_theme='tokyonight'
+let g:onedark_config = {
+    \ 'style': 'deep',
+\}
+colorscheme onedark
 " color setting
 if exists('+termguicolors')
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
@@ -594,7 +637,7 @@ set termguicolors
 nnoremap <Leader>u :UndotreeToggle<cr>
 
 " coc.nvim
-let g:coc_global_extensions = ['coc-tsserver', 'coc-eslint8', 'coc-fzf-preview', 'coc-lists' , 'coc-prettier', 'coc-spell-checker', 'coc-highlight', 'coc-emmet', 'coc-diagnostic', 'coc-json', 'coc-jedi', 'coc-yaml', 'coc-react-refactor']
+let g:coc_global_extensions = ['coc-tsserver', 'coc-eslint8', 'coc-fzf-preview', 'coc-lists' , 'coc-prettier', 'coc-spell-checker', 'coc-highlight', 'coc-emmet', 'coc-diagnostic', 'coc-json', 'coc-jedi', 'coc-yaml', 'coc-react-refactor', 'coc-ultisnips', 'coc-fzf-preview', 'coc-explorer']
 
 inoremap  <expr> <C-Space> coc#refresh()
 nnoremap <silent> K       :<C-u>call <SID>show_documentation()<CR>
@@ -615,6 +658,7 @@ augroup END
 "" coc.nvim
 imap <C-ENTER> <Plug>(coc-snippets-expand)
 
+let g:UltiSnipsExpandTrigger = '<f5>'
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
@@ -669,47 +713,12 @@ require('nvim-treesitter.configs').setup {
   },
 }
 EOF
+lua << END
+require('lualine').setup{
+  sections = { lualine_c = {{ 'filename', path=1 }} }
+}
+END
 
-set noshowmode
-let g:lightline = {
-\   'colorscheme': 'tokyonight',
-      \ 'component_function': {
-      \   'filename': 'LightlineFilename',
-      \ },
-\ }
-
-" Show full path of filename
-function! LightlineFilename()
-  let root = fnamemodify(get(b:, 'git_dir'), ':h')
-  let path = expand('%:p')
-  if path[:len(root)-1] ==# root
-    return path[len(root)+1:]
-  endif
-  return expand('%')
-endfunction
-
-let g:lightline.component_expand = {
-\   'linter_warnings': 'lightline#coc#warnings',
-\   'linter_errors': 'lightline#coc#errors',
-\   'linter_info': 'lightline#coc#info',
-\   'linter_hints': 'lightline#coc#hints',
-\   'linter_ok': 'lightline#coc#ok',
-\   'status': 'lightline#coc#status',
-\ }
-
-" Set color to the components:
-let g:lightline.component_type = {
-\   'linter_warnings': 'warning',
-\   'linter_errors': 'error',
-\   'linter_info': 'info',
-\   'linter_hints': 'hints',
-\   'linter_ok': 'left',
-\ }
-
-" Add the components to the lightline:
-let g:lightline.active = {
-\   'left': [[ 'coc_info', 'coc_hints', 'coc_errors', 'coc_warnings', 'coc_ok' ], [ 'coc_status', 'filename']]
-\ }
-
-call lightline#coc#register()
-
+" set noshowmode
+set laststatus=3
+highlight WinSeparator guibg=None
