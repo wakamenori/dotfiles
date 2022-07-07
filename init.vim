@@ -14,6 +14,7 @@ set textwidth=0
 set autoindent
 set clipboard=unnamed
 syntax on
+xnoremap p pgvy
 
 let g:black_virtualenv = "~/venv/"
 let g:python3_host_prog = "~/venv/bin/python3"
@@ -240,20 +241,20 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 autocmd VimEnter * call s:setup_bufferline()
 function! s:setup_bufferline() abort
 lua<<EOF
-require('bufferline').setup{options={
-  separator_style = "slant",
-  diagnostics = "coc",
-  diagnostics_indicator = function(count, level, diagnostics_dict, context)
-  local s = " "
-  for e, n in pairs(diagnostics_dict) do
-    local sym = e == "error" and " "
-    or (e == "warning" and " " or "" )
-    s = s .. n .. sym
-  end
-  return s
-  end
-
-}}
+require('bufferline').setup{
+  options={
+    separator_style = "slant",
+    diagnostics = "coc",
+    diagnostics_indicator = function(count, level, diagnostics_dict, context)
+    local s = " "
+    for e, n in pairs(diagnostics_dict) do
+      local sym = e == "error" and " "
+      or (e == "warning" and " " or "" )
+      s = s .. n .. sym
+    end
+    return s
+    end
+  }}
 EOF
 endfunction
 
@@ -346,10 +347,6 @@ if has('nvim')
   Plug 'gelguy/wilder.nvim', { 'do': function('UpdateRemotePlugins') }
 else
   Plug 'gelguy/wilder.nvim'
-
-  " To use Python remote plugin features in Vim, can be skipped
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
 endif
 Plug 'romgrk/fzy-lua-native'
 Plug 'nvim-telescope/telescope.nvim'
@@ -377,8 +374,10 @@ Plug 'petertriho/nvim-scrollbar'
 Plug 'mrjones2014/legendary.nvim'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'jsborjesson/vim-uppercase-sql'
+Plug 'nixprime/cpsm'
 call plug#end()
 
+let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
 " lspcolor
 lua << EOF
 require("lsp-colors").setup({
@@ -399,17 +398,14 @@ EOF
 
 nmap <silent> <C-_> <Plug>(pydocstring)
 let g:Illuminate_ftblacklist = ['nerdtree']
-
+augroup illuminate_augroup
+    autocmd!
+    autocmd VimEnter * hi illuminatedWord ctermbg=4 guibg=#1d3e59
+augroup END
 " phaazon/hop.nvim
 lua require("hop").setup{}
 
 lua require("icon-picker")
-
-" lua << EOF
-" local opts = { noremap = true, silent = true }
-" vim.keymap.set("i", "<C-i>", "<cmd>PickIconsInsert<cr>", opts)
-" vim.keymap.set("n", "<Leader><Leader>i", "<cmd>PickIcons<cr>", opts)
-" EOF
 
 lua << EOF
 require("scrollbar").setup()
@@ -459,7 +455,6 @@ require('gitsigns').setup {
 }
 EOF
 
-
 " folke/todo-comments
 lua << EOF
   require("todo-comments").setup{}
@@ -476,9 +471,9 @@ wilder.set_option('pipeline', {
     wilder.python_file_finder_pipeline({
       file_command = function(ctx, arg)
         if string.find(arg, '.') ~= nil then
-          return {'fdfind', '-tf', '-H'}
+          return {'fd', '-tf', '-H'}
         else
-          return {'fdfind', '-tf'}
+          return {'fd', '-tf'}
         end
       end,
       dir_command = {'fd', '-td'},
@@ -518,6 +513,9 @@ local popupmenu_renderer = wilder.popupmenu_renderer(
     border = 'rounded',
     empty_message = wilder.popupmenu_empty_message_with_spinner(),
     highlighter = highlighters,
+    highlights = {
+      accent = wilder.make_hl('WilderAccent', 'Pmenu', {{a = 1}, {a = 1}, {foreground = '#f4468f'}}),
+    },
     left = {
       ' ',
       wilder.popupmenu_devicons(),
@@ -701,6 +699,7 @@ nnoremap <silent> <Leader>E :NERDTreeFind<CR>
 "" react-refactor
 xmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>a  <Plug>(coc-codeaction-selected)
+let g:markdown_fenced_languages = ['html', 'python', 'lua', 'vim', 'typescript', 'javascript']
 "" treesitter
 lua <<EOF
 require('nvim-treesitter.configs').setup {
@@ -722,3 +721,4 @@ END
 " set noshowmode
 set laststatus=3
 highlight WinSeparator guibg=None
+
