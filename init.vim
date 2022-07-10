@@ -1,3 +1,4 @@
+set termguicolors
 set cmdheight=0
 set mouse=a
 set fenc=utf-8
@@ -157,19 +158,9 @@ if &term =~ "xterm"
     inoremap <special> <expr> <Esc>[200~ XTermPasteBegin("")
 endif
 
-" NERDTree
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
-let NERDTreeHighlightCursorline = 0
-" nnoremap <leader>n :NERDTreeFocus<CR>
-" nnoremap <CBufferPrevious-n> :NERDTree<CR>
-" nnoremap <silent> <Leader>e :NERDTreeToggle<CR>
-" nnoremap <C-f> :NERDTreeFind<CR>
-let NERDTreeShowHidden = 1
-
 " Start NERDTree when Vim is started without file arguments.
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+" autocmd StdinReadPre * let s:std_in=1
+" autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NvimTreeOpen | endif
 
 " FZF
 " [Buffers] Jump to the existing window if possible
@@ -189,9 +180,11 @@ let g:fzf_commands_expect = 'alt-enter,ctrl-x'
 " タブ移動
 " map <C-l> gt
 " map <C-h> gT
-let g:move_key_modifier = 'A'
-let g:move_key_modifier_visualmode = 'A'
 
+nnoremap J :m .+1<CR>==
+nnoremap K :m .-2<CR>==
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
 
 highlight SignColumn ctermbg=brown
 
@@ -227,7 +220,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+nnoremap <silent> H :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -260,7 +253,6 @@ endfunction
 
 
 call plug#begin()
-Plug 'preservim/nerdtree'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'yuki-yano/fzf-preview.vim', { 'branch': 'release/rpc' }
@@ -285,7 +277,6 @@ Plug 'vim-scripts/indentpython.vim'
 Plug 'honza/vim-snippets'
 Plug 'mbbill/undotree'
 Plug 'tpope/vim-surround'
-Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'artanikin/vim-synthwave84'
 Plug 'mtdl9/vim-log-highlighting'
 Plug '4513ECHO/vim-colors-hatsunemiku'
@@ -297,8 +288,8 @@ Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'javascript.jsx'] }
 Plug 'othree/yajs.vim', { 'for': ['javascript', 'javascript.jsx'] }
 Plug 'othree/es.next.syntax.vim', { 'for': ['javascript', 'javascript.jsx'] }
 Plug 'othree/javascript-libraries-syntax.vim', { 'for': ['javascript', 'javascript.jsx'] }
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'lambdalisue/fern.vim'
+Plug 'kyazdani42/nvim-tree.lua'
 Plug 'josa42/vim-lightline-coc'
 Plug 'folke/todo-comments.nvim'
 Plug 'psf/black'
@@ -309,7 +300,6 @@ Plug 'tpope/vim-endwise'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'rcarriga/nvim-notify'
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'antoinemadec/FixCursorHold.nvim'
 Plug 'stevearc/dressing.nvim'
 Plug 'toppair/reach.nvim'
@@ -352,7 +342,6 @@ Plug 'romgrk/fzy-lua-native'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'tpope/vim-repeat'
 Plug 'mbbill/undotree'
-Plug 'matze/vim-move'
 Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' }
 Plug 'rebelot/kanagawa.nvim'
 Plug 'weilbith/nvim-code-action-menu'
@@ -375,7 +364,31 @@ Plug 'mrjones2014/legendary.nvim'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'jsborjesson/vim-uppercase-sql'
 Plug 'nixprime/cpsm'
+Plug 'lambdalisue/fern.vim'
+Plug 'glepnir/dashboard-nvim'
+Plug 'norcalli/nvim-colorizer.lua'
+Plug 'marko-cerovac/material.nvim'
 call plug#end()
+
+lua require'colorizer'.setup()
+let g:indent_guides_exclude_filetypes = ["dashboard"]
+let g:extra_whitespace_ignored_filetypes = ['unite', 'mkd', "dashboard"]
+
+lua << EOF
+require("nvim-tree").setup({
+  diagnostics = {
+    enable = true,
+    show_on_dirs = true,
+    icons = {
+      hint = "",
+      info = "",
+      warning = "",
+      error = "",
+    },
+  },
+  filters = { custom = { "^.git$" } }
+})
+EOF
 
 let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
 " lspcolor
@@ -397,10 +410,10 @@ vim.keymap.set("n", "<c-tab>", "<plug>(CybuLastusedNext)")
 EOF
 
 nmap <silent> <C-_> <Plug>(pydocstring)
-let g:Illuminate_ftblacklist = ['nerdtree']
+let g:Illuminate_ftblacklist = ['nerdtree', 'NvimTree']
 augroup illuminate_augroup
     autocmd!
-    autocmd VimEnter * hi illuminatedWord ctermbg=4 guibg=#1d3e59
+    autocmd VimEnter * hi illuminatedWord ctermbg=4 guibg=#33467c
 augroup END
 " phaazon/hop.nvim
 lua require("hop").setup{}
@@ -452,6 +465,45 @@ require('gitsigns').setup {
   yadm = {
     enable = false
   },
+  on_attach = function(bufnr)
+    local gs = package.loaded.gitsigns
+
+    local function map(mode, l, r, opts)
+      opts = opts or {}
+      opts.buffer = bufnr
+      vim.keymap.set(mode, l, r, opts)
+    end
+
+    -- Navigation
+    map('n', ']c', function()
+      if vim.wo.diff then return ']c' end
+      vim.schedule(function() gs.next_hunk() end)
+      return '<Ignore>'
+    end, {expr=true})
+
+    map('n', '[c', function()
+      if vim.wo.diff then return '[c' end
+      vim.schedule(function() gs.prev_hunk() end)
+      return '<Ignore>'
+    end, {expr=true})
+
+    -- Actions
+    map({'n', 'v'}, '<leader>hs', ':Gitsigns stage_hunk<CR>')
+    map({'n', 'v'}, '<leader>hr', ':Gitsigns reset_hunk<CR>')
+    map('n', '<leader>hS', gs.stage_buffer)
+    map('n', '<leader>hu', gs.undo_stage_hunk)
+    map('n', '<leader>hR', gs.reset_buffer)
+    map('n', '<leader>hp', gs.preview_hunk)
+    map('n', '<leader>hb', function() gs.blame_line{full=true} end)
+    map('n', '<leader>tb', gs.toggle_current_line_blame)
+    map('n', '<leader>hd', gs.diffthis)
+    map('n', '<leader>hD', function() gs.diffthis('~') end)
+    map('n', '<leader>td', gs.toggle_deleted)
+
+    -- Text object
+    map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+  end
+
 }
 EOF
 
@@ -602,7 +654,9 @@ let g:rainbow_conf = {
 let g:onedark_config = {
     \ 'style': 'deep',
 \}
-colorscheme onedark
+
+let g:tokyonight_style = "night"
+colorscheme tokyonight
 " color setting
 if exists('+termguicolors')
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
@@ -638,7 +692,7 @@ nnoremap <Leader>u :UndotreeToggle<cr>
 let g:coc_global_extensions = ['coc-tsserver', 'coc-eslint8', 'coc-fzf-preview', 'coc-lists' , 'coc-prettier', 'coc-spell-checker', 'coc-highlight', 'coc-emmet', 'coc-diagnostic', 'coc-json', 'coc-jedi', 'coc-yaml', 'coc-react-refactor', 'coc-ultisnips', 'coc-fzf-preview', 'coc-explorer']
 
 inoremap  <expr> <C-Space> coc#refresh()
-nnoremap <silent> K       :<C-u>call <SID>show_documentation()<CR>
+nnoremap <silent> H       :<C-u>call <SID>show_documentation()<CR>
 nmap     <silent> [dev]rn <Plug>(coc-rename)
 nmap     <silent> [dev]a  <Plug>(coc-codeaction-selected)iw
 nmap     <silent> [dev]d  :CocDiagnostics<CR>
@@ -693,8 +747,8 @@ nnoremap <silent> [ff]t  :<C-u>CocCommand fzf-preview.CocTypeDefinition<CR>
 nnoremap <silent> [ff]o  :<C-u>CocCommand fzf-preview.CocOutline --add-fzf-arg=--exact --add-fzf-arg=--no-sort<CR>
 
 "" fern
-nnoremap <silent> <Leader>e :NERDTreeToggle<CR>
-nnoremap <silent> <Leader>E :NERDTreeFind<CR>
+nnoremap <silent> <Leader>e :NvimTreeToggle<CR>
+nnoremap <silent> <Leader>E :NvimTreeFindFile<CR>
 
 "" react-refactor
 xmap <leader>a  <Plug>(coc-codeaction-selected)
@@ -714,11 +768,19 @@ require('nvim-treesitter.configs').setup {
 EOF
 lua << END
 require('lualine').setup{
-  sections = { lualine_c = {{ 'filename', path=1 }} }
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'diff'},
+    lualine_c = {{ 'filename', path=1 }},
+    lualine_x = {'diagnostics'},
+    lualine_z = {''},
+    lualine_y = {''},
+    },
+  options = {
+      theme = 'palenight'
+    }
 }
 END
 
 " set noshowmode
 set laststatus=3
-highlight WinSeparator guibg=None
-
