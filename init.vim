@@ -24,6 +24,7 @@ augroup black_on_save
   autocmd BufWritePre *.py Black
 augroup end
 
+nmap <C-q> :q<CR>
 nnoremap <F9> :Black<CR>
 " Enable folding
 set foldmethod=indent
@@ -276,14 +277,8 @@ Plug 'SirVer/ultisnips'
 Plug 'vim-scripts/indentpython.vim'
 Plug 'honza/vim-snippets'
 Plug 'mbbill/undotree'
-Plug 'tpope/vim-surround'
-Plug 'artanikin/vim-synthwave84'
-Plug 'mtdl9/vim-log-highlighting'
-Plug '4513ECHO/vim-colors-hatsunemiku'
-Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
-Plug 'kyazdani42/nvim-web-devicons'
-Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
 Plug 'ryanoasis/vim-devicons'
+Plug 'kyazdani42/nvim-web-devicons'
 Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'javascript.jsx'] }
 Plug 'othree/yajs.vim', { 'for': ['javascript', 'javascript.jsx'] }
 Plug 'othree/es.next.syntax.vim', { 'for': ['javascript', 'javascript.jsx'] }
@@ -356,7 +351,6 @@ Plug 'pappasam/coc-jedi', { 'do': 'yarn install --frozen-lockfile && yarn build'
 Plug 'tmux-plugins/vim-tmux'
 Plug 'github/copilot.vim'
 Plug 'folke/lsp-colors.nvim'
-Plug 'ghillb/cybu.nvim'
 Plug 'vim-jp/vimdoc-ja'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'petertriho/nvim-scrollbar'
@@ -368,10 +362,47 @@ Plug 'lambdalisue/fern.vim'
 Plug 'glepnir/dashboard-nvim'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'marko-cerovac/material.nvim'
+Plug 'kevinhwang91/nvim-ufo'
+Plug 'kevinhwang91/promise-async'
+Plug 'neovim/nvim-lspconfig'
+Plug 'SmiteshP/nvim-navic'
+Plug 'williamboman/nvim-lsp-installer'
+Plug 'ray-x/lsp_signature.nvim'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'onsails/lspkind-nvim'
+Plug 'ray-x/cmp-treesitter'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
 call plug#end()
+
+lua << EOF
+-- place this in one of your configuration file(s)
+vim.api.nvim_set_keymap('', 'f', "<cmd>lua require'hop'.hint_words()<cr>", {})
+vim.api.nvim_set_keymap('', 'F', "<cmd>lua require'hop'.hint_patterns()<cr>", {})
+EOF
+" vim.api.nvim_set_keymap('', 'fk', "<cmd>lua require'hop'.hint_words({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR })<cr>", {})
+" vim.api.nvim_set_keymap('', 'fj', "<cmd>lua require'hop'.hint_words({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR })<cr>", {})
+
+lua vim.o.winbar = '%{%get(b:, "coc_symbol_line", "")%}'
 
 lua require'colorizer'.setup()
 let g:indent_guides_exclude_filetypes = ["dashboard"]
+lua << EOF
+local db = require('dashboard')
+db.custom_header = {
+  \ ' ███╗   ██╗ ███████╗ ██████╗  ██╗   ██╗ ██╗ ███╗   ███╗',
+\ ' ████╗  ██║ ██╔════╝██╔═══██╗ ██║   ██║ ██║ ████╗ ████║',
+\ ' ██╔██╗ ██║ █████╗  ██║   ██║ ██║   ██║ ██║ ██╔████╔██║',
+\ ' ██║╚██╗██║ ██╔══╝  ██║   ██║ ╚██╗ ██╔╝ ██║ ██║╚██╔╝██║',
+\ ' ██║ ╚████║ ███████╗╚██████╔╝  ╚████╔╝  ██║ ██║ ╚═╝ ██║',
+\ ' ╚═╝  ╚═══╝ ╚══════╝ ╚═════╝    ╚═══╝   ╚═╝ ╚═╝     ╚═╝',
+
+  }
+EOF
 let g:extra_whitespace_ignored_filetypes = ['unite', 'mkd', "dashboard"]
 
 lua << EOF
@@ -400,21 +431,15 @@ require("lsp-colors").setup({
   Hint = "#10B981"
 })
 EOF
-
-lua << EOF
-require("cybu").setup()
-vim.keymap.set("n", "[b", "<Plug>(CybuPrev)")
-vim.keymap.set("n", "]b", "<Plug>(CybuNext)")
-vim.keymap.set("n", "<c-s-tab>", "<plug>(CybuLastusedPrev)")
-vim.keymap.set("n", "<c-tab>", "<plug>(CybuLastusedNext)")
-EOF
-
 nmap <silent> <C-_> <Plug>(pydocstring)
+
 let g:Illuminate_ftblacklist = ['nerdtree', 'NvimTree']
 augroup illuminate_augroup
     autocmd!
-    autocmd VimEnter * hi illuminatedWord ctermbg=4 guibg=#33467c
+    autocmd VimEnter * hi illuminatedWord cterm=italic gui=italic
 augroup END
+
+" ctermbg=4 guibg=#
 " phaazon/hop.nvim
 lua require("hop").setup{}
 
@@ -429,8 +454,8 @@ require('gitsigns').setup {
   signs = {
     add          = {hl = 'GitSignsAdd'   , text = '┃', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
     change       = {hl = 'GitSignsChange', text = '┃', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
-    delete       = {hl = 'GitSignsDelete', text = '_', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
-    topdelete    = {hl = 'GitSignsDelete', text = '‾', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+    delete       = {hl = 'GitSignsDelete', text = '▁', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+    topdelete    = {hl = 'GitSignsDelete', text = '▔', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
     changedelete = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
     },
   signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
@@ -507,6 +532,7 @@ require('gitsigns').setup {
 }
 EOF
 
+
 " folke/todo-comments
 lua << EOF
   require("todo-comments").setup{}
@@ -566,7 +592,7 @@ local popupmenu_renderer = wilder.popupmenu_renderer(
     empty_message = wilder.popupmenu_empty_message_with_spinner(),
     highlighter = highlighters,
     highlights = {
-      accent = wilder.make_hl('WilderAccent', 'Pmenu', {{a = 1}, {a = 1}, {foreground = '#f4468f'}}),
+      accent = wilder.make_hl('WilderAccent', 'Pmenu', {{a = 1}, {a = 1}, {foreground = '#c75ae8'}}),
     },
     left = {
       ' ',
@@ -601,7 +627,10 @@ lua <<EOF
 require'nvim-treesitter.configs'.setup {
   highlight = {
     enable = true,
-  }
+  },
+  indent = {
+      enable = true,
+  },
 }
 EOF
 lua <<EOF
@@ -689,7 +718,7 @@ set termguicolors
 nnoremap <Leader>u :UndotreeToggle<cr>
 
 " coc.nvim
-let g:coc_global_extensions = ['coc-tsserver', 'coc-eslint8', 'coc-fzf-preview', 'coc-lists' , 'coc-prettier', 'coc-spell-checker', 'coc-highlight', 'coc-emmet', 'coc-diagnostic', 'coc-json', 'coc-jedi', 'coc-yaml', 'coc-react-refactor', 'coc-ultisnips', 'coc-fzf-preview', 'coc-explorer']
+let g:coc_global_extensions = ['coc-tsserver', 'coc-eslint8', 'coc-fzf-preview', 'coc-lists' , 'coc-prettier', 'coc-spell-checker', 'coc-highlight', 'coc-emmet', 'coc-diagnostic', 'coc-json', 'coc-jedi', 'coc-yaml', 'coc-react-refactor', 'coc-ultisnips', 'coc-fzf-preview', 'coc-explorer', 'coc-markmap', 'coc-cssmodules', 'coc-docker', 'coc-floaterm', 'coc-sql', 'coc-swagger', '@yaegassy/coc-tailwindcss3']
 
 inoremap  <expr> <C-Space> coc#refresh()
 nnoremap <silent> H       :<C-u>call <SID>show_documentation()<CR>
@@ -764,21 +793,26 @@ require('nvim-treesitter.configs').setup {
   highlight = {
     enable = true,
   },
+  incremental_selection = {
+      enable = true,
+    }
 }
 EOF
 lua << END
+local navic = require("nvim-navic")
 require('lualine').setup{
   sections = {
     lualine_a = {'mode'},
     lualine_b = {'diff'},
     lualine_c = {{ 'filename', path=1 }},
     lualine_x = {'diagnostics'},
-    lualine_z = {''},
-    lualine_y = {''},
+    lualine_y = {'anzu#search_status'},
+    lualine_z = {'bo:filetype'},
     },
   options = {
-      theme = 'palenight'
-    }
+      theme = 'tokyonight'
+    },
+  extensions = { 'nvim-tree', 'fzf', 'quickfix', 'nvim-dap-ui' }
 }
 END
 
