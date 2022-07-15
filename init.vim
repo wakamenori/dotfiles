@@ -16,6 +16,9 @@ set autoindent
 set clipboard=unnamed
 syntax on
 xnoremap p pgvy
+let g:mkdp_markdown_css = '/Users/matsukokuumahikari/md.css'
+let g:mkdp_highlight_css = '/Users/matsukokuumahikari/md.css'
+let g:mkdp_theme = 'light'
 
 let g:black_virtualenv = "~/venv/"
 let g:python3_host_prog = "~/venv/bin/python3"
@@ -340,7 +343,6 @@ Plug 'mbbill/undotree'
 Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' }
 Plug 'rebelot/kanagawa.nvim'
 Plug 'weilbith/nvim-code-action-menu'
-" Plug 'vimpostor/vim-tpipeline'
 Plug 'nvim-lua/popup.nvim'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'wthollingsworth/pomodoro.nvim'
@@ -377,31 +379,21 @@ Plug 'onsails/lspkind-nvim'
 Plug 'ray-x/cmp-treesitter'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
+Plug 'kylechui/nvim-surround'
 call plug#end()
+
+lua require("nvim-surround").setup()
 
 lua << EOF
 -- place this in one of your configuration file(s)
 vim.api.nvim_set_keymap('', 'f', "<cmd>lua require'hop'.hint_words()<cr>", {})
 vim.api.nvim_set_keymap('', 'F', "<cmd>lua require'hop'.hint_patterns()<cr>", {})
 EOF
-" vim.api.nvim_set_keymap('', 'fk', "<cmd>lua require'hop'.hint_words({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR })<cr>", {})
-" vim.api.nvim_set_keymap('', 'fj', "<cmd>lua require'hop'.hint_words({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR })<cr>", {})
-
-lua vim.o.winbar = '%{%get(b:, "coc_symbol_line", "")%}'
 
 lua require'colorizer'.setup()
 let g:indent_guides_exclude_filetypes = ["dashboard"]
 lua << EOF
 local db = require('dashboard')
-db.custom_header = {
-  \ ' ███╗   ██╗ ███████╗ ██████╗  ██╗   ██╗ ██╗ ███╗   ███╗',
-\ ' ████╗  ██║ ██╔════╝██╔═══██╗ ██║   ██║ ██║ ████╗ ████║',
-\ ' ██╔██╗ ██║ █████╗  ██║   ██║ ██║   ██║ ██║ ██╔████╔██║',
-\ ' ██║╚██╗██║ ██╔══╝  ██║   ██║ ╚██╗ ██╔╝ ██║ ██║╚██╔╝██║',
-\ ' ██║ ╚████║ ███████╗╚██████╔╝  ╚████╔╝  ██║ ██║ ╚═╝ ██║',
-\ ' ╚═╝  ╚═══╝ ╚══════╝ ╚═════╝    ╚═══╝   ╚═╝ ╚═╝     ╚═╝',
-
-  }
 EOF
 let g:extra_whitespace_ignored_filetypes = ['unite', 'mkd', "dashboard"]
 
@@ -434,10 +426,10 @@ EOF
 nmap <silent> <C-_> <Plug>(pydocstring)
 
 let g:Illuminate_ftblacklist = ['nerdtree', 'NvimTree']
-augroup illuminate_augroup
-    autocmd!
-    autocmd VimEnter * hi illuminatedWord cterm=italic gui=italic
-augroup END
+" augroup illuminate_augroup
+"     autocmd!
+"     autocmd VimEnter * hi illuminatedWord cterm=italic gui=italic
+" augroup END
 
 " ctermbg=4 guibg=#
 " phaazon/hop.nvim
