@@ -1,5 +1,5 @@
 alias co="code ."
-alias ch="charm ."
+alias ch="~/shellscripts/pycharm ."
 alias ws=" ~/shellscripts/webstorm ."
 # Executes commands at the start of an interactive session.
 #
