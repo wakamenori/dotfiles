@@ -1,3 +1,5 @@
+let mapleader=" "
+
 " IMEがオンの時もコマンドを入力したい
 nnoremap あ a
 nnoremap い i
@@ -12,68 +14,40 @@ nnoremap d "_d
 "nnoremap d "_d
 nnoremap D "_D
 
+lua << EOF
+local function delete_special()
+	local line_data = vim.api.nvim_win_get_cursor(0) -- returns {row, col}
+	local current_line = vim.api.nvim_buf_get_lines(0, line_data[1]-1, line_data[1], false)
+	if current_line[1] == "" then
+		return '"_dd'
+	else
+		return 'dd'
+	end
+end
+vim.keymap.set( "n", "dd", delete_special, { noremap = true, expr = true } )
+EOF
 
 " jjでnormal mode
 inoremap <silent> jj <ESC>
 
-nnoremap J :m .+1<CR>==
-nnoremap K :m .-2<CR>==
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
-
 " switch pane
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+" nnoremap <C-J> <C-W><C-J>
+" nnoremap <C-K> <C-W><C-K>
+" nnoremap <C-L> <C-W><C-L>
+" nnoremap <C-H> <C-W><C-H>
+
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
 
 nmap <C-q> :q<CR>
 
 " 折り返し時に表示行単位での移動できるようにする
+
 nnoremap j gj
 nnoremap k gk
 
 xnoremap p pgvy
 
-nnoremap <silent> <C-n> :BufferLineCycleNext<CR>
-nnoremap <silent> <C-p> :BufferLineCyclePrev<CR>
-
-" These commands will move the current buffer backwards or forwards in the bufferline
-nnoremap <silent><C-s> :BufferLineMoveNext<CR>
-nnoremap <silent><C-a> :BufferLineMovePrev<CR>
-
-" These commands will sort buffers by directory, language, or a custom criteria
-nnoremap <silent>be :BufferLineSortByExtension<CR>
-nnoremap <silent>bd :BufferLineSortByDirectory<CR>
-
-
-" anzu
-nmap n <Plug>(anzu-n-with-echo)
-nmap N <Plug>(anzu-N-with-echo)
-nmap * <Plug>(anzu-star-with-echo)
-nmap # <Plug>(anzu-sharp-with-echo)
-nmap <silent> <Esc><Esc> <Plug>(anzu-clear-search-status) :set nohlsearch<CR><ESC>
-
-" nvim-tree
-nnoremap <silent> <Leader>e :NvimTreeToggle<CR>
-nnoremap <silent> <Leader>E :NvimTreeFindFile<CR>
-
-" fzf-preview
-nnoremap <silent> <C-f>  :<C-u>CocCommand fzf-preview.FromResources buffer project_mru project<CR>
-nnoremap <silent> [ff]s  :<C-u>CocCommand fzf-preview.GitStatus<CR>
-nnoremap <silent> [ff]gg :<C-u>CocCommand fzf-preview.GitActions<CR>
-nnoremap <silent> [ff]b  :<C-u>CocCommand fzf-preview.Buffers<CR>
-nnoremap          [ff]f  :<C-u>CocCommand fzf-preview.ProjectGrep --add-fzf-arg=--exact --add-fzf-arg=--no-sort<Space>
-xnoremap          [ff]f  "sy:CocCommand fzf-preview.ProjectGrep --add-fzf-arg=--exact --add-fzf-arg=--no-sort<Space>-F<Space>"<C-r>=substitute(substitute(@s, '\n', '', 'g'), '/', '\\/', 'g')<CR>"
-
-nnoremap <silent> [ff]q  :<C-u>CocCommand fzf-preview.CocCurrentDiagnostics<CR>
-nnoremap <silent> [ff]rf :<C-u>CocCommand fzf-preview.CocReferences<CR>
-nnoremap <silent> [ff]d  :<C-u>CocCommand fzf-preview.CocDefinition<CR>
-nnoremap <silent> [ff]t  :<C-u>CocCommand fzf-preview.CocTypeDefinition<CR>
-nnoremap <silent> [ff]o  :<C-u>CocCommand fzf-preview.CocOutline --add-fzf-arg=--exact --add-fzf-arg=--no-sort<CR>
-
-
-"" react-refactor
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
 

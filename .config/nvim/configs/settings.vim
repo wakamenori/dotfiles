@@ -15,6 +15,11 @@ set textwidth=0
 set autoindent
 set clipboard=unnamed
 
+autocmd FileType typescriptreact set shiftwidth=2 tabstop=2
+autocmd FileType typescript  set shiftwidth=2 tabstop=2
+autocmd FileType html set shiftwidth=2 tabstop=2
+autocmd FileType json set shiftwidth=2 tabstop=2
+
 " 行末の1文字先までカーソルを移動できるように
 set virtualedit=onemore
 " インデントはスマートインデント
@@ -52,6 +57,7 @@ set t_Co=256 " iTerm2など既に256色環境なら無くても良い
 syntax enable " 構文に色を付ける
 set signcolumn=yes
 
+
 augroup vimrc-auto-cursorline
   autocmd!
   autocmd CursorMoved,CursorMovedI * call s:auto_cursorline('CursorMoved')
@@ -64,6 +70,7 @@ augroup vimrc-auto-cursorline
     if a:event ==# 'WinEnter'
       setlocal cursorline
       let s:cursorline_lock = 2
+      :Lspsaga show_line_diagnostics
     elseif a:event ==# 'WinLeave'
       setlocal nocursorline
     elseif a:event ==# 'CursorMoved'
@@ -77,6 +84,7 @@ augroup vimrc-auto-cursorline
       endif
     elseif a:event ==# 'CursorHold'
       setlocal cursorline
+      " :Lspsaga show_line_diagnostics
       let s:cursorline_lock = 1
     endif
   endfunction
@@ -89,13 +97,32 @@ set ignorecase
 set smartcase
 " 検索文字列入力時に順次対象文字列にヒットさせる
 set incsearch
+set hlsearch
 " 検索時に最後まで行ったら最初に戻る
 set wrapscan
+set nowrap
 
 " Backspaceの影響範囲に制限を設けないようにする
 set backspace=indent,eol,start
 
 set laststatus=3
 
-let g:tokyonight_style = "night"
-colorscheme tokyonight
+colorscheme tokyonight-night
+
+" gray
+highlight! CmpItemAbbrDeprecated guibg=NONE gui=strikethrough guifg=#808080
+" blue
+highlight! CmpItemAbbrMatch guibg=NONE guifg=#569CD6
+highlight! CmpItemAbbrMatchFuzzy guibg=NONE guifg=#569CD6
+" light blue
+highlight! CmpItemKindVariable guibg=NONE guifg=#9CDCFE
+highlight! CmpItemKindInterface guibg=NONE guifg=#9CDCFE
+highlight! CmpItemKindText guibg=NONE guifg=#9CDCFE
+" pink
+highlight! CmpItemKindFunction guibg=NONE guifg=#C586C0
+highlight! CmpItemKindMethod guibg=NONE guifg=#C586C0
+" front
+highlight! CmpItemKindKeyword guibg=NONE guifg=#D4D4D4
+highlight! CmpItemKindProperty guibg=NONE guifg=#D4D4D4
+highlight! CmpItemKindUnit guibg=NONE guifg=#D4D4D4
+

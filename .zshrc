@@ -1,6 +1,7 @@
 alias co="code ."
 alias ch="~/shellscripts/pycharm ."
-alias ws=" ~/shellscripts/webstorm ."
+alias ws="~/shellscripts/webstorm ."
+alias ds="~/shellscripts/dataspell ."
 # Executes commands at the start of an interactive session.
 #
 # Authors:
@@ -46,6 +47,10 @@ alias t="tig"
 # python
 alias vpy="python3 -m venv venv ; source ./venv/bin/activate"
 alias de="deactivate"
+
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 # ghq & peco
 function peco-src () {
   local selected_dir=$(ghq list -p | peco --query "$LBUFFER")

@@ -1,16 +1,5 @@
 source ~/.config/nvim/configs/plugs.vim
 
-let vim_scripts = split(glob("~/.config/nvim/configs/" . "*.vim"))
-
-for file in vim_scripts
-  execute 'source' file
-endfor
-
-augroup start_screen
-  au!
-  autocmd VimEnter * ++once lua require('start')
-augroup END
-
 let g:mkdp_markdown_css = '/Users/matsukokuumahikari/md.css'
 let g:mkdp_highlight_css = '/Users/matsukokuumahikari/md.css'
 let g:mkdp_theme = 'light'
@@ -22,12 +11,6 @@ augroup black_on_save
   autocmd!
   autocmd BufWritePre *.py Black
 augroup end
-
-nnoremap <F9> :Black<CR>
-" Enable folding
-set foldmethod=indent
-set foldlevel=99
-nnoremap <space> za
 
 " インデント
 let g:indent_guides_enable_on_vim_startup = 1
@@ -60,7 +43,6 @@ command! -nargs=0 Fq call fzf#run({
 \ })
 
 
-autocmd CursorHold * silent call CocActionAsync('highlight')
 
 autocmd VimEnter * call s:setup_bufferline()
 function! s:setup_bufferline() abort
@@ -68,9 +50,6 @@ endfunction
 
 
 let g:indent_guides_exclude_filetypes = ["dashboard"]
-lua << EOF
-local db = require('dashboard')
-EOF
 let g:extra_whitespace_ignored_filetypes = ['unite', 'mkd', "dashboard"]
 
 let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
@@ -89,6 +68,7 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 EOF
+
 lua <<EOF
 require("neotest").setup({
   adapters = {
@@ -116,39 +96,16 @@ let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 set termguicolors
 endif
 
-nmap <Leader>t :TagbarToggle<CR>
-
-nmap [dev]tr :lua require("neotest").run.run()<CR>
-nmap [dev]tc :lua require("neotest").run.run(vim.fn.expand("%"))<CR>
-nmap [dev]to :lua require("neotest").summary.open()<CR>
-
-set termguicolors
-
-" undo
-nnoremap <Leader>u :UndotreeToggle<cr>
-
-let g:UltiSnipsExpandTrigger = '<f5>'
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-inoremap <silent><expr> <Tab>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<Tab>" :
-      \ coc#refresh()
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-function! s:show_documentation() abort
-if index(['vim','help'], &filetype) >= 0
-  execute 'h ' . expand('<cword>')
-elseif coc#rpc#ready()
-  call CocActionAsync('doHover')
-endif
-endfunction
-
-"" fzf-preview
-let $BAT_THEME                     = 'OneHalfDark'
-let $FZF_PREVIEW_PREVIEW_BAT_THEME = 'OneHalfDark'
 
 let g:markdown_fenced_languages = ['html', 'python', 'lua', 'vim', 'typescript', 'javascript']
 
+let vim_scripts = split(glob("~/.config/nvim/configs/" . "*.vim"))
+
+for file in vim_scripts
+  execute 'source' file
+endfor
+
+augroup start_screen
+  au!
+  autocmd VimEnter * ++once lua require('start')
+augroup END

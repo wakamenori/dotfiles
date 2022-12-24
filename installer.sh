@@ -14,6 +14,8 @@ for f in ${files}; do
     [ "$f" = ".git" ] && continue
     [ "$f" = ".gitconfig.local.template" ] && continue
     [ "$f" = ".gitmodules" ] && continue
+    dirname=`dirname $f`
+    mkdir ~/$dirname
     # シンボリックリンクを貼る
     ln -snfv ${PWD}/$f ~/${f}
 done
