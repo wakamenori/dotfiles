@@ -44,7 +44,7 @@ return packer.startup(function(use)
 	use("wbthomason/packer.nvim") -- Have packer manage itself
 
 	--Colorschemes
-    use("xiyaowong/nvim-transparent")
+	use("xiyaowong/nvim-transparent")
 	use({ "tjdevries/colorbuddy.vim" })
 	use({ "bkegley/gloombuddy" })
 	use({ "folke/tokyonight.nvim" })
@@ -154,12 +154,12 @@ return packer.startup(function(use)
 	-- Cmd
 	use({ "gelguy/wilder.nvim" })
 
-	-- use({
-	-- 	"windwp/nvim-autopairs",
-	-- 	config = function()
-	-- 		require("nvim-autopairs").setup({})
-	-- 	end,
-	-- })
+	use({
+		"windwp/nvim-autopairs",
+		config = function()
+			require("nvim-autopairs").setup({})
+		end,
+	})
 
 	-- Highlight
 	use({ "RRethy/vim-illuminate" })
@@ -241,8 +241,7 @@ return packer.startup(function(use)
 		requires = "nvim-lua/plenary.nvim",
 	})
 
-
-    -- Session
+	-- Session
 	use({
 		"rmagatti/auto-session",
 		config = function()

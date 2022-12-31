@@ -1,6 +1,7 @@
 vim.o.termguicolors = true
 
 require("plugins")
+require("plugins.autopairs")
 require("plugins.autosave")
 require("plugins.lsp")
 require("plugins.bufferline")
