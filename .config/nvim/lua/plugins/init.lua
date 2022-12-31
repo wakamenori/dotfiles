@@ -58,6 +58,7 @@ return packer.startup(function(use)
 	use("FrenzyExists/aquarium-vim")
 	use({ "nyoom-engineering/oxocarbon.nvim" })
 	use({ "wuelnerdotexe/vim-enfocado" })
+    use( 'marko-cerovac/material.nvim' )
 
 	-- UI
 	use("nvim-lua/popup.nvim") -- An implementation of the Popup API from vim in Neovim
@@ -216,8 +217,7 @@ return packer.startup(function(use)
 	use({ "hrsh7th/cmp-cmdline" })
 	use({ "saadparwaiz1/cmp_luasnip" })
 	use({ "L3MON4D3/LuaSnip" })
-	use({ "onsails/lspkind.nvim" })
-	-- use({ "onsails/lspkind-nvim" })
+	use({ "onsails/lspkind-nvim" })
 
 	-- Test
 	use({
@@ -257,6 +257,10 @@ return packer.startup(function(use)
 
 	-- Obsidian
 	use({ "epwalsh/obsidian.nvim" })
+
+
+    --- Fast load
+    use("lewis6991/impatient.nvim")
 
 	-- Fun
 	use({ "eandrju/cellular-automaton.nvim" })

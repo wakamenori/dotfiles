@@ -1,5 +1,6 @@
 vim.o.termguicolors = true
 
+require("plugins.inpatient")
 require("plugins")
 require("plugins.autopairs")
 require("plugins.autosave")
@@ -12,6 +13,7 @@ require("plugins.hlslens")
 require("plugins.hop")
 require("plugins.indent-blankline")
 require("plugins.lualine")
+require("plugins.material")
 require("plugins.navic")
 require("plugins.neotest") -- まだ適当
 require("plugins.noice")
