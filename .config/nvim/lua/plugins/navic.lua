@@ -1,4 +1,9 @@
-local navic = require("nvim-navic")
+local navic_status, navic = pcall(require, "nvim-navic")
+if not navic_status then
+	return
+end
+
+-- vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
 
 vim.api.nvim_set_hl(0, "NavicIconsFile",          {default = true, bg = "#000000", fg = "#ffffff"})
 vim.api.nvim_set_hl(0, "NavicIconsModule",        {default = true, bg = "#000000", fg = "#ffffff"})
