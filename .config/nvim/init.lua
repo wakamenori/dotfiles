@@ -25,6 +25,7 @@ require("plugins.terminal")
 require("plugins.todo-comments")
 require("plugins.transparent")
 require("plugins.treesitter")
+require("plugins.which-key")
 require("plugins.wild")
 require("plugins.illuminate")
 
