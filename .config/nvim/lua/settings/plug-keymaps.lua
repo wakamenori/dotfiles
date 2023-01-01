@@ -17,5 +17,5 @@ keymap("v", "˙", ":MoveHBlock(-1) <CR>") --h
 
 vim.cmd([[imap <silent><script><expr> <C-c> copilot#Accept("\<CR>")]])
 vim.cmd([[let g:copilot_no_tab_map = v:true]])
-keymap("i", "<C-]>", "<Plug>(copilot-next)", opts)
-keymap("i", "<C-[>", "<Plug>(copilot-previous)", opts)
+keymap("i", "«", "<Plug>(copilot-next)", opts)
+keymap("i", "‘", "<Plug>(copilot-previous)", opts)

@@ -5,7 +5,7 @@ end
 
 bufferline.setup({
 	options = {
-		separator_style = "thin",
+		separator_style = "thin", -- "slant" | "thick" | "thin" | { 'any', 'any' }
 		diagnostics = "nvim_lsp",
 		diagnostics_indicator = function(count, level, diagnostics_dict, context)
 			local icon = level:match("error") and " " or " "

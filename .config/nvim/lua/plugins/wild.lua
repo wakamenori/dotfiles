@@ -48,7 +48,7 @@ end
 wilder.set_option(
 	"renderer",
 	wilder.popupmenu_renderer(wilder.popupmenu_border_theme({
-		pumblend = 20,
+		-- pumblend = 20, -- transparent background
 		-- highlighter = wilder.basic_highlighter(),
 		highlighter = wilder.highlighter_with_gradient({
 			wilder.basic_highlighter(), -- or wilder.lua_fzy_highlighter(),

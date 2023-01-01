@@ -20,19 +20,6 @@ table.insert(vimgrep_arguments, "--hidden")
 table.insert(vimgrep_arguments, "--glob")
 table.insert(vimgrep_arguments, "!**/.git/*")
 
--- telescope.setup({
--- 	defaults = {
--- 		-- `hidden = true` is not supported in text grep commands.
--- 		vimgrep_arguments = vimgrep_arguments,
--- 	},
--- 	pickers = {
--- 		find_files = {
--- 			-- `hidden = true` will still show the inside of `.git/` as it's not `.gitignore`d.
--- 			find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
--- 		},
--- 	},
--- })
-
 local fb_actions = require("telescope").extensions.file_browser.actions
 
 telescope.setup({
@@ -104,14 +91,8 @@ telescope.setup({
 telescope.load_extension("file_browser")
 telescope.load_extension("frecency")
 require("telescope").load_extension("packer")
--- require('telescope').load_extension('fzf')
+require('telescope').load_extension('fzf')
 
--- require("which-key").register(
---     {
---         ["<C-f>"] = { "<cmd>Telescope find_files hidden=true<cr>"            , "Find files"},
---         ["<C-c>"] = {"<cmd>Telescope live_grep<cr>", "Find Code"}
---     }
--- )
 
 vim.keymap.set("n", ";f", function()
 	builtin.find_files({
