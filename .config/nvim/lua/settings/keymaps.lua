@@ -35,7 +35,7 @@ keymap("n", "<C-k>", "<C-w>k", opts)
 keymap("n", "<C-h>", "<C-w>h", opts)
 keymap("n", "<C-l>", "<C-w>l", opts)
 
-keymap("", "<C-q>", ":q<CR>")
+keymap("", "<C-q>", ":q<CR>", opts)
 
 keymap("i", "jj", "<esc>", opts)
 

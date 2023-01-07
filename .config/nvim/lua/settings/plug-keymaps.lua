@@ -4,16 +4,16 @@ local term_opts = { silent = true }
 local keymap = vim.keymap.set
 
 -- Normal-mode commands
-keymap("n", "∆", ":MoveLine(1) <CR>") --j
-keymap("n", "˚", ":MoveLine(-1) <CR>") --k
-keymap("n", "¬", ":MoveChar(1) <CR>") --l
-keymap("n", "˙", ":MoveChar(-1) <CR>") --h
+keymap("n", "<A-j>", ":MoveLine(1) <CR>", { noremap = true }) --j
+keymap("n", "<A-k>", ":MoveLine(-1) <CR>", { noremap = true }) --k
+keymap("n", "<A-l>", ":MoveChar(1) <CR>", { noremap = true }) --l
+keymap("n", "<A-h>", ":MoveChar(-1) <CR>", { noremap = true }) --h
 
 -- Visual-mode commands
-keymap("v", "∆", ":MoveBlock(1) <CR>") --j
-keymap("v", "˚", ":MoveBlock(-1) <CR>") --k
-keymap("v", "¬", ":MoveHBlock(1) <CR>") --l
-keymap("v", "˙", ":MoveHBlock(-1) <CR>") --h
+keymap("v", "<A-j>", ":MoveBlock(1) <CR>", { noremap = true }) --j
+keymap("v", "<A-k>", ":MoveBlock(-1) <CR>", { noremap = true }) --k
+keymap("v", "<A-l>", ":MoveHBlock(1) <CR>", { noremap = true }) --l
+keymap("v", "<A-h>", ":MoveHBlock(-1) <CR>", { noremap = true }) --h
 
 vim.cmd([[imap <silent><script><expr> <C-c> copilot#Accept("\<CR>")]])
 vim.cmd([[let g:copilot_no_tab_map = v:true]])

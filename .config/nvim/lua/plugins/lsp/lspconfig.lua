@@ -50,7 +50,7 @@ local on_attach = function(client, bufnr)
 	}, { prefix = "g", mode = "n" })
 
 	which_key.register({
-		f = { "<cmd>lua vim.lsp.buf.format() <CR>", "Format", opts },
+		f = { "<cmd>lua vim.lsp.buf.format({timeout_ms = 2000}) <CR>", "Format", opts },
 		a = { "<cmd>Lspsaga code_action<CR>", "Code action", opts },
 		r = { "<cmd>Lspsaga rename<CR>", "Rename", opts },
 		d = { "<cmd>Lspsaga show_line_diagnostics<CR>", "Show line diagnostics", opts },
