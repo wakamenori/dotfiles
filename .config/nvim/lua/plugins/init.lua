@@ -40,7 +40,7 @@ packer.init({
 
 -- Install your plugins here
 return packer.startup(function(use)
-	-- My plugins here
+	---- My plugins here
 	use("wbthomason/packer.nvim") -- Have packer manage itself
 
 	--Colorschemes
@@ -59,6 +59,8 @@ return packer.startup(function(use)
 	use({ "nyoom-engineering/oxocarbon.nvim" })
 	use({ "wuelnerdotexe/vim-enfocado" })
 	use("marko-cerovac/material.nvim")
+	use("shaunsingh/nord.nvim")
+	use("rebelot/kanagawa.nvim")
 
 	-- UI
 	use("nvim-lua/popup.nvim") -- An implementation of the Popup API from vim in Neovim
@@ -152,6 +154,7 @@ return packer.startup(function(use)
 		"m-demare/hlargs.nvim",
 		requires = { "nvim-treesitter/nvim-treesitter" },
 	})
+	use("CKolkey/ts-node-action")
 
 	-- Cmd
 	use({ "gelguy/wilder.nvim" })
@@ -194,14 +197,11 @@ return packer.startup(function(use)
 		"glepnir/lspsaga.nvim",
 		branch = "main",
 		config = function()
-			local saga = require("lspsaga")
-			saga.init_lsp_saga({
-				-- your configuration
-			})
+			require("lspsaga").setup({})
 		end,
 	})
 	use({ "jose-elias-alvarez/null-ls.nvim", requires = { "nvim-lua/plenary.nvim" } })
-	use({ "jayp0521/mason-null-ls.nvim" })
+	use({ "jay-babu/mason-null-ls.nvim" })
 	use({
 		"folke/trouble.nvim",
 		requires = "kyazdani42/nvim-web-devicons",
