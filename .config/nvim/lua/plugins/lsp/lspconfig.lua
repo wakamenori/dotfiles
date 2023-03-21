@@ -74,7 +74,6 @@ local on_attach = function(client, bufnr)
 	end
 end
 
-
 -- used to enable autocompletion (assign to every lsp server config)
 local capabilities = cmp_nvim_lsp.default_capabilities()
 
@@ -88,7 +87,7 @@ end
 
 vim.diagnostic.config({
 	virtual_text = false,
-    severity_sort = true,
+	severity_sort = true,
 })
 
 -- enable lsp servers
@@ -97,7 +96,6 @@ lspconfig.pyright.setup({
 	on_attach = on_attach,
 	capabilities = capabilities,
 })
-
 
 -- configure html server
 lspconfig["html"].setup({
@@ -117,6 +115,7 @@ typescript.setup({
 		on_attach = on_attach,
 	},
 })
+typescript.actions.addMissingImports()
 
 -- configure css server
 lspconfig["cssls"].setup({
@@ -139,10 +138,11 @@ lspconfig["tailwindcss"].setup({
 -- })
 
 -- configure lua server (with special settings)
-lspconfig["sumneko_lua"].setup({
+lspconfig["lua_ls"].setup({
 	capabilities = capabilities,
 	on_attach = on_attach,
-	settings = { -- custom settings for lua
+	settings = {
+		-- custom settings for lua
 		Lua = {
 			-- make the language server recognize "vim" global
 			diagnostics = {

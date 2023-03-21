@@ -43,8 +43,9 @@ return packer.startup(function(use)
 	---- My plugins here
 	use("wbthomason/packer.nvim") -- Have packer manage itself
 
+    use 'wakatime/vim-wakatime'
+
 	--Colorschemes
-	use("xiyaowong/nvim-transparent")
 	use({ "tjdevries/colorbuddy.vim" })
 	use({ "bkegley/gloombuddy" })
 	use({ "folke/tokyonight.nvim" })
@@ -81,6 +82,11 @@ return packer.startup(function(use)
 		},
 		tag = "nightly", -- optional, updated every week. (see issue #1193)
 	})
+
+    use({'antosha417/nvim-lsp-file-operations',
+        config = function()
+            require('nvim-lsp-file-operations').setup()
+        end})
 
 	-- Buffer
 	use({ "akinsho/bufferline.nvim", tag = "v3.*", requires = "nvim-tree/nvim-web-devicons" })

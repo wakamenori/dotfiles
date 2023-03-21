@@ -1,6 +1,7 @@
 require("settings.keymaps")
 require("settings.plug-keymaps")
 
+-- require("settings.colorscheme").set()
 vim.cmd([[colorscheme oxocarbon]])
 
 local options = {
@@ -34,11 +35,12 @@ local options = {
 	incsearch = true,
 	hlsearch = true,
 	wrapscan = true,
-	wrap = false,
+	wrap = true,
 	wildmenu = true,
 	splitbelow = true,
 	splitright = true,
-    cursorline = true,
+	cursorline = true,
+	spell = true,
 }
 
 vim.opt.shortmess:append("c")

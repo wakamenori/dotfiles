@@ -20,7 +20,9 @@ require('nvim-treesitter.configs').setup {
         "markdown_inline",
         "toml",
         "vim",
-        "sql"
+        "sql",
+        "diff",
+        "dockerfile"
     },
     highlight = {
         enable = true,
@@ -39,3 +41,5 @@ require('nvim-treesitter.configs').setup {
     },
 }
 require('hlargs').setup()
+require("ts-node-action").setup({})
+vim.keymap.set({ "n" }, "U", require("ts-node-action").node_action, { desc = "Trigger Node Action" })

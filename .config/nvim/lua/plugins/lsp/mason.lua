@@ -26,7 +26,7 @@ mason_lspconfig.setup({
 		"html",
 		"cssls",
 		"tailwindcss",
-		"sumneko_lua",
+        	-- "lua_lsp",
 		"emmet_ls",
         "pyright",
         -- "cspell", -- FIXME: cspell can not be installed via ensure_installed
