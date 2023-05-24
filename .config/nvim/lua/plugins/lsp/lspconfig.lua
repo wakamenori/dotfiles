@@ -50,7 +50,7 @@ local on_attach = function(client, bufnr)
 	}, { prefix = "g", mode = "n" })
 
 	which_key.register({
-		f = { "<cmd>lua vim.lsp.buf.format({timeout_ms = 2000}) <CR>", "Format", opts },
+		f = { "<cmd>lua vim.lsp.buf.format({timeout_ms = 4000}) <CR>", "Format", opts },
 		a = { "<cmd>Lspsaga code_action<CR>", "Code action", opts },
 		r = { "<cmd>Lspsaga rename<CR>", "Rename", opts },
 		d = { "<cmd>Lspsaga show_line_diagnostics<CR>", "Show line diagnostics", opts },
@@ -79,7 +79,7 @@ local capabilities = cmp_nvim_lsp.default_capabilities()
 
 -- Change the Diagnostic symbols in the sign column (gutter)
 -- (not in youtube nvim video)
-local signs = { Error = " ", Warn = " ", Hint = "ﴞ ", Info = " " }
+local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 for type, icon in pairs(signs) do
 	local hl = "DiagnosticSign" .. type
 	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
@@ -128,6 +128,9 @@ lspconfig["tailwindcss"].setup({
 	capabilities = capabilities,
 	on_attach = on_attach,
 })
+
+
+require("flutter-tools").setup {} -- use defaults
 
 -- FIXME: cmpでこいつが生成したタグを選択すると、vimがフリーズするバグが発生した
 -- configure emmet language server
@@ -184,4 +187,9 @@ require("lsp-colors").setup({
 	Warning = "#e0af68",
 	Information = "#0db9d7",
 	Hint = "#10B981",
+})
+
+require("lsp-file-operations").setup({
+	-- used to see debug logs in file `vim.fn.stdpath("cache") .. lsp-file-operations.log`
+	debug = false,
 })

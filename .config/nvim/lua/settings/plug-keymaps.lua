@@ -15,7 +15,7 @@ keymap("v", "<A-k>", ":MoveBlock(-1) <CR>", { noremap = true }) --k
 keymap("v", "<A-l>", ":MoveHBlock(1) <CR>", { noremap = true }) --l
 keymap("v", "<A-h>", ":MoveHBlock(-1) <CR>", { noremap = true }) --h
 
-vim.cmd([[imap <silent><script><expr> <C-c> copilot#Accept("\<CR>")]])
-vim.cmd([[let g:copilot_no_tab_map = v:true]])
+-- vim.cmd([[imap <silent><script><expr> <C-c> copilot#Accept("\<CR>")]])
+-- vim.cmd([[let g:copilot_no_tab_map = v:true]])
 keymap("i", "«", "<Plug>(copilot-next)", opts)
 keymap("i", "‘", "<Plug>(copilot-previous)", opts)

@@ -1,4 +1,5 @@
 alias co="code ."
+alias coi="code-insiders ."
 alias ch="~/shellscripts/pycharm ."
 alias ws="~/shellscripts/webstorm ."
 alias ds="~/shellscripts/dataspell ."
@@ -44,6 +45,7 @@ alias sp="spotify"
 # git
 alias gopen="git open"
 alias t="tig"
+alias gm="git branch --merged|egrep -v '\*|dev|main'|xargs git branch -d"
 # python
 alias vpy="python3 -m venv venv ; source ./venv/bin/activate"
 alias de="deactivate"
@@ -51,6 +53,10 @@ alias de="deactivate"
 export PATH="$HOME/.pyenv/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
+
+# Flutter
+export PATH=~/development/flutter/bin:$PATH
+
 # ghq & peco
 function peco-src () {
   local selected_dir=$(ghq list -p | peco --query "$LBUFFER")
@@ -111,3 +117,7 @@ if [ -f '/Users/matsukokuumahikari/google-cloud-sdk/path.zsh.inc' ]; then . '/Us
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/matsukokuumahikari/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/matsukokuumahikari/google-cloud-sdk/completion.zsh.inc'; fi
+eval "$(github-copilot-cli alias -- "$0")"
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+

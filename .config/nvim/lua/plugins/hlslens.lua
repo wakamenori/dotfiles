@@ -31,4 +31,3 @@ vim.cmd([[
             autocmd CmdlineLeave : lua require('scrollbar.handlers.search').handler.hide()
         augroup END
     ]])
-

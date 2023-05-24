@@ -43,7 +43,7 @@ return packer.startup(function(use)
 	---- My plugins here
 	use("wbthomason/packer.nvim") -- Have packer manage itself
 
-    use 'wakatime/vim-wakatime'
+	use("wakatime/vim-wakatime")
 
 	--Colorschemes
 	use({ "tjdevries/colorbuddy.vim" })
@@ -82,11 +82,13 @@ return packer.startup(function(use)
 		},
 		tag = "nightly", -- optional, updated every week. (see issue #1193)
 	})
-
-    use({'antosha417/nvim-lsp-file-operations',
-        config = function()
-            require('nvim-lsp-file-operations').setup()
-        end})
+	use({
+		"antosha417/nvim-lsp-file-operations",
+		requires = {
+			{ "nvim-lua/plenary.nvim" },
+			{ "kyazdani42/nvim-tree.lua" },
+		},
+	})
 
 	-- Buffer
 	use({ "akinsho/bufferline.nvim", tag = "v3.*", requires = "nvim-tree/nvim-web-devicons" })
@@ -160,8 +162,14 @@ return packer.startup(function(use)
 		"m-demare/hlargs.nvim",
 		requires = { "nvim-treesitter/nvim-treesitter" },
 	})
-	use("CKolkey/ts-node-action")
-
+	use({
+		"Wansmer/treesj",
+		requires = { "nvim-treesitter" },
+		config = function()
+			require("treesj").setup({ --[[ your config ]]
+			})
+		end,
+	})
 	-- Cmd
 	use({ "gelguy/wilder.nvim" })
 
@@ -202,9 +210,6 @@ return packer.startup(function(use)
 	use({
 		"glepnir/lspsaga.nvim",
 		branch = "main",
-		config = function()
-			require("lspsaga").setup({})
-		end,
 	})
 	use({ "jose-elias-alvarez/null-ls.nvim", requires = { "nvim-lua/plenary.nvim" } })
 	use({ "jay-babu/mason-null-ls.nvim" })
@@ -214,6 +219,14 @@ return packer.startup(function(use)
 		config = function()
 			require("trouble").setup({})
 		end,
+	})
+
+	use({
+		"akinsho/flutter-tools.nvim",
+		requires = {
+			"nvim-lua/plenary.nvim",
+			"stevearc/dressing.nvim", -- optional for vim.ui.select
+		},
 	})
 
 	-- CMP
@@ -238,7 +251,7 @@ return packer.startup(function(use)
 	use({ "nvim-neotest/neotest-python" })
 
 	-- Copilot
-	use({ "github/copilot.vim" })
+	-- use({ "github/copilot.vim" })
 
 	-- Comments
 	use({ "numToStr/Comment.nvim" })
