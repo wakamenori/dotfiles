@@ -1,17 +1,19 @@
 local wilder = require("wilder")
 wilder.setup({ modes = { ":", "/", "?" } })
 
-wilder.set_option("pipeline", {
-	wilder.branch(
-		wilder.cmdline_pipeline({
-			fuzzy = 1,
-			set_pcre2_pattern = 1,
-		}),
-		wilder.python_search_pipeline({
-			pattern = "fuzzy",
-		})
-	),
+
+wilder.set_option('pipeline', {
+  wilder.branch(
+    wilder.cmdline_pipeline({
+      fuzzy = 2,
+      set_pcre2_pattern = 1,
+    }),
+    wilder.python_search_pipeline({
+      pattern = 'fuzzy',
+    })
+  ),
 })
+
 
 local gradient = {
 	"#f4468f",
@@ -42,7 +44,8 @@ end
 wilder.set_option(
 	"renderer",
 	wilder.popupmenu_renderer(wilder.popupmenu_palette_theme({
-		-- pumblend = 20, -- transparent background
+        prompt_position = "bottom",
+		pumblend = 20, -- transparent background
 		-- highlighter = wilder.basic_highlighter(),
 		highlighter = wilder.highlighter_with_gradient({
 			wilder.basic_highlighter(), -- or wilder.lua_fzy_highlighter(),

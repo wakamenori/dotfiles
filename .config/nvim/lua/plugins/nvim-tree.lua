@@ -9,7 +9,21 @@ vim.g.loaded_netrwPlugin = 1
 local HEIGHT_RATIO = 0.8 -- You can change this
 local WIDTH_RATIO = 0.6 -- You can change this too
 
+local function on_attach(bufnr)
+	local api = require("nvim-tree.api")
+	local function opts(desc)
+		return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+	end
+
+	api.config.mappings.default_on_attach(bufnr)
+	vim.keymap.set("n", "x", api.node.navigate.parent_close, opts("Close"))
+	vim.keymap.set("n", "r", api.fs.rename_sub, opts('Rename: Omit Filename'))
+	-- override a default
+	-- vim.keymap.set("n", "<C-e>", api.tree.reload, opts("Refresh"))
+end
+
 nvim_tree.setup({
+	on_attach = on_attach,
 	diagnostics = {
 		enable = true,
 		show_on_dirs = true,
@@ -35,11 +49,11 @@ nvim_tree.setup({
 	},
 
 	view = {
-		mappings = {
-			list = {
-				{ key = "x", action = "close_node" },
-			},
-		},
+		-- mappings = {
+		-- 	list = {
+		-- 		{ key = "x", action = "close_node" },
+		-- 	},
+		-- },
 		float = {
 			enable = true,
 			open_win_config = function()

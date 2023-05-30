@@ -129,6 +129,11 @@ lspconfig["tailwindcss"].setup({
 	on_attach = on_attach,
 })
 
+lspconfig["eslint"].setup({
+	capabilities = capabilities,
+	on_attach = on_attach,
+})
+
 
 require("flutter-tools").setup {} -- use defaults
 

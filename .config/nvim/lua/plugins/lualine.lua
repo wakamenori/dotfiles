@@ -3,7 +3,7 @@ if not lualine_status_ok then
 	return
 end
 
-function searchCount()
+local function searchCount()
 	local search = vim.fn.searchcount({ maxcount = 0 }) -- maxcount = 0 makes the number not be capped at 99
 	local searchCurrent = search.current
 	local searchTotal = search.total
@@ -79,7 +79,7 @@ function diagnostics_message:update_status(is_focused)
 				top = d
 			end
 		end
-		local icons = { " ", " ", " ", " " }
+		local icons = { "󰅚 ", " ", " ", "󰌶 " }
 		local hl = {
 			self.highlights.error,
 			self.highlights.warn,
@@ -95,10 +95,30 @@ function diagnostics_message:update_status(is_focused)
 	end
 end
 
-require("lualine").setup({
+lualine.setup({
 	sections = {
-		lualine_a = { "mode", "diff" },
-		lualine_b = { { "filename", path = 1 } },
+		lualine_a = {
+			"mode",
+		},
+		lualine_b = {
+
+			{ "filename", path = 1 },
+			{
+				"diff",
+				colored = true, -- Displays a colored diff status if set to true
+				diff_color = {
+					-- Same color values as the general color option can be used here.
+					added = "DiffAdd", -- Changes the diff's added color
+					modified = "DiffChange", -- Changes the diff's modified color
+					removed = "DiffDelete", -- Changes the diff's removed color you
+				},
+				symbols = { added = "+", modified = "~", removed = "-" }, -- Changes the symbols used by the diff.
+				source = nil, -- A function that works as a data source for diff.
+				-- It must return a table as such:
+				--   { added = add_count, modified = modified_count, removed = removed_count }
+				-- or nil on failure. count <= 0 won't be displayed.
+			},
+		},
 		lualine_c = {
 			{
 				diagnostics_message,
@@ -115,7 +135,7 @@ require("lualine").setup({
 		lualine_z = { "bo:filetype" },
 	},
 	options = {
-		theme = "vn-night",
+		theme = "github_dark_dimmed",
 	},
 	extensions = { "fzf", "quickfix", "nvim-dap-ui" },
 })

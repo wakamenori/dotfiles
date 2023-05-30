@@ -22,6 +22,15 @@ local telescopeConfig = require("telescope.config")
 
 local fb_actions = require("telescope").extensions.file_browser.actions
 
+-- Clone the default Telescope configuration
+local vimgrep_arguments = { unpack(telescopeConfig.values.vimgrep_arguments) }
+
+-- I want to search in hidden/dot files.
+table.insert(vimgrep_arguments, "--hidden")
+-- I don't want to search in the `.git` directory.
+table.insert(vimgrep_arguments, "--glob")
+table.insert(vimgrep_arguments, "!**/.git/*")
+
 telescope.setup({
 	pickers = {
 		find_files = {
@@ -50,6 +59,7 @@ telescope.setup({
 			},
 		},
 		file_ignore_patterns = { "node_modules", ".git", ".idea" },
+		vimgrep_arguments = vimgrep_arguments,
 	},
 	extensions = {
 		file_browser = {
@@ -90,7 +100,6 @@ telescope.setup({
 })
 telescope.load_extension("file_browser")
 telescope.load_extension("frecency")
-require("telescope").load_extension("packer")
 require("telescope").load_extension("fzf")
 
 vim.keymap.set("n", ";f", function()
