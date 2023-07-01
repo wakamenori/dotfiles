@@ -4,10 +4,10 @@ if not setup then
 	return
 end
 
-
 -- for conciseness
 local formatting = null_ls.builtins.formatting -- to setup formatters
 local diagnostics = null_ls.builtins.diagnostics -- to setup linters
+local code_actions = null_ls.builtins.code_actions
 
 -- configure null_ls
 null_ls.setup({
@@ -17,16 +17,21 @@ null_ls.setup({
 		--  "formatting.prettier.with({disabled_filetypes: {}})" (see null-ls docs)
 		formatting.prettier, -- js/ts formatter
 		formatting.stylua, -- lua formatter
-		diagnostics.eslint_d.with({ -- js/ts linter
+		diagnostics.eslint_d.with({
+			-- js/ts linter
 			-- only enable eslint if root has .eslintrc.js (not in youtube nvim video)
 			condition = function(utils)
 				return utils.root_has_file(".eslintrc.json") -- change file extension if you use something else
 			end,
 		}),
+		code_actions.eslint_d,
 		diagnostics.flake8, -- python linter
-		-- diagnostics.mypy, -- python linter
-		formatting.black, -- python formatter
+		diagnostics.mypy, -- python linter
+		formatting.black.with({ extra_args = { "--line-length", "119" } }), -- python formatter
+		-- formatting.black, -- python formatter
 		formatting.isort, -- python formatter
+
+		code_actions.gitsigns,
 
 		-- diagnostics.cspell.with({
 		-- 	diagnostics_postprocess = function(diagnostic)

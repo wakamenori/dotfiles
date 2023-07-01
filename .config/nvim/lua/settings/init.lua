@@ -1,13 +1,16 @@
+vim.cmd([[
+" colorscheme github_dark_dimmed
+" colorscheme vn-night
+" colorscheme tokyonight-night
+" colorscheme text-to-colorscheme
+colorscheme oxocarbon
+" hi Normal guibg=NONE ctermbg=NONE
+]])
+
 require("settings.keymaps")
 require("settings.plug-keymaps")
 
 -- require("settings.colorscheme").set()
-vim.cmd([[
-colorscheme github_dark_dimmed
-" colorscheme oxocarbon
-" hi Normal guibg=NONE ctermbg=NONE
-]])
-
 local opt = vim.opt
 
 opt.mousemoveevent = true

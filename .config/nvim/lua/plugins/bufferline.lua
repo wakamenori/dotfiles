@@ -13,7 +13,7 @@ bufferline.setup({
 		end,
 		hover = {
 			enabled = true,
-			delay = 200,
+			delay = 0,
 			reveal = { "close" },
 		},
 	},

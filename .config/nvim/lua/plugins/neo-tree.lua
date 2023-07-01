@@ -268,6 +268,6 @@ require("which-key").register({
 }, { prefix = "<leader>" })
 
 require("which-key").register({
-	["<C-b>"] = { ":Neotree source=buffers position=float<CR>", "Toggle Neo-tree buffers" },
+	[";b"] = { ":Neotree source=buffers position=float<CR>", "Toggle Neo-tree buffers" },
 	[";g"] = { ":Neotree source=git_status position=float<CR>", "Toggle Neo-tree git status" },
 })

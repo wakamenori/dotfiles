@@ -1,7 +1,32 @@
+function get_env_value(env_file, key)
+	local env_values = {}
+	for line in io.lines(env_file) do
+		if string.sub(line, 1, 1) ~= "#" then
+			local key_from_file, value = string.match(line, "(.-)=(.*)")
+			if key_from_file and value then
+				env_values[key_from_file] = value
+			end
+		end
+	end
+	return env_values[key]
+end
+
 require("lazy").setup({
 	"wakatime/vim-wakatime",
-
+	"github/copilot.vim",
 	-- colorscheme
+	"ramojus/mellifluous.nvim",
+	{ "dasupradyumna/midnight.nvim", lazy = false, priority = 1000 },
+	{
+		"svermeulen/text-to-colorscheme.nvim",
+		config = function()
+			require("text-to-colorscheme").setup({
+				ai = {
+					openai_api_key = get_env_value("/Users/matsukokuumahikari/.config/nvim/.env", "OPENAI_API_KEY"),
+				},
+			})
+		end,
+	},
 	"olimorris/onedarkpro.nvim",
 
 	"rebelot/kanagawa.nvim",
@@ -17,6 +42,8 @@ require("lazy").setup({
 	"tjdevries/colorbuddy.vim",
 	"folke/tokyonight.nvim",
 	"nyoom-engineering/oxocarbon.nvim",
+	"jacoborus/tender.vim",
+	{ "bluz71/vim-nightfly-colors", name = "nightfly", lazy = false, priority = 1000 },
 	-- Filer
 	{
 		"nvim-neo-tree/neo-tree.nvim",
@@ -216,7 +243,12 @@ require("lazy").setup({
 	"windwp/nvim-autopairs",
 
 	-- Search
-	"kevinhwang91/nvim-hlslens",
+	{
+		"kevinhwang91/nvim-hlslens",
+		config = function()
+			require("hlslens").setup({})
+		end,
+	},
 	"folke/todo-comments.nvim",
 	"petertriho/nvim-scrollbar",
 
