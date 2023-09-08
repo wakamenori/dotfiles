@@ -43,7 +43,7 @@ local on_attach = function(client, bufnr)
 	-- set keybinds
 	which_key.register({
 		name = "LSP",
-		f = { "<cmd>Lspsaga lsp_finder<CR>", "Finder", opts },
+		f = { "<cmd>Lspsaga finder<CR>", "Finder", opts },
 		d = { "<Cmd>lua vim.lsp.buf.definition()<CR>", "Declaration", opts },
 		D = { "<cmd>Lspsaga peek_definition<CR>", "Peak definition", opts },
 		i = { "<cmd>lua vim.lsp.buf.implementation()<CR>", "Implementation", opts },
@@ -92,13 +92,37 @@ vim.diagnostic.config({
 
 -- enable lsp servers
 -- Python
+
+local virtual_env_path = vim.trim(vim.fn.system("poetry config virtualenvs.path"))
+local virtual_env_dirctory = vim.trim(vim.fn.system("poetry env list"))
+
+local python_path = "python"
+-- 現在のディレクトリに対応するvirtualenvがあるかのチェック
+if #vim.split(virtual_env_dirctory, "\n") == 1 then
+	python_path = string.format("%s/%s/bin/python", virtual_env_path, virtual_env_dirctory)
+end
 lspconfig.pyright.setup({
 	on_attach = on_attach,
 	capabilities = capabilities,
+	-- settings = {
+	-- 	python = {
+	-- 		-- pythonPath = python_path,
+	-- 		venvPath = ".",
+	-- 		pythonPath = "./.venv/bin/python",
+	-- 		analysis = {
+	-- 			extraPaths = { "." },
+	-- 		},
+	-- 	},
+	-- },
 })
 
 -- configure html server
 lspconfig["html"].setup({
+	capabilities = capabilities,
+	on_attach = on_attach,
+})
+
+lspconfig["marksman"].setup({
 	capabilities = capabilities,
 	on_attach = on_attach,
 })
@@ -134,8 +158,7 @@ lspconfig["eslint"].setup({
 	on_attach = on_attach,
 })
 
-
-require("flutter-tools").setup {} -- use defaults
+require("flutter-tools").setup({}) -- use defaults
 
 -- FIXME: cmpでこいつが生成したタグを選択すると、vimがフリーズするバグが発生した
 -- configure emmet language server

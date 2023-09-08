@@ -99,7 +99,7 @@ telescope.setup({
 	},
 })
 telescope.load_extension("file_browser")
-telescope.load_extension("frecency")
+-- telescope.load_extension("frecency")
 require("telescope").load_extension("fzf")
 
 vim.keymap.set("n", ";f", function()

@@ -16,16 +16,17 @@ require("lazy").setup({
 	"github/copilot.vim",
 	-- colorscheme
 	"ramojus/mellifluous.nvim",
+	"Mofiqul/dracula.nvim",
 	{ "dasupradyumna/midnight.nvim", lazy = false, priority = 1000 },
 	{
 		"svermeulen/text-to-colorscheme.nvim",
-		config = function()
-			require("text-to-colorscheme").setup({
-				ai = {
-					openai_api_key = get_env_value("/Users/matsukokuumahikari/.config/nvim/.env", "OPENAI_API_KEY"),
-				},
-			})
-		end,
+		-- config = function()
+		-- 	require("text-to-colorscheme").setup({
+		-- 		ai = {
+		-- 			openai_api_key = get_env_value("/Users/matsukokuumahikari/.config/nvim/.env", "OPENAI_API_KEY"),
+		-- 		},
+		-- 	})
+		-- end,
 	},
 	"olimorris/onedarkpro.nvim",
 
@@ -47,7 +48,7 @@ require("lazy").setup({
 	-- Filer
 	{
 		"nvim-neo-tree/neo-tree.nvim",
-		branch = "v2.x",
+		branch = "v3.x",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
@@ -138,14 +139,13 @@ require("lazy").setup({
 		end,
 	},
 	"nvim-telescope/telescope-file-browser.nvim",
-	{
-		"nvim-telescope/telescope-frecency.nvim",
-		config = function()
-			require("telescope").load_extension("frecency")
-		end,
-		requires = { "kkharji/sqlite.lua" },
-		dependencies = { "kkharji/sqlite.lua" },
-	},
+	-- {
+	-- 	"nvim-telescope/telescope-frecency.nvim",
+	-- 	config = function()
+	-- 		require("telescope").load_extension("frecency")
+	-- 	end,
+	-- 	dependencies = { "kkharji/sqlite.lua" },
+	-- },
 	{
 		"nvim-telescope/telescope-fzf-native.nvim",
 		build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
@@ -228,6 +228,7 @@ require("lazy").setup({
 			require("git").setup()
 		end,
 	},
+	{ "NeogitOrg/neogit", dependencies = "nvim-lua/plenary.nvim" },
 
 	-- Auto Session
 	{
@@ -282,4 +283,7 @@ require("lazy").setup({
 	},
 	-- Terminal
 	{ "akinsho/toggleterm.nvim", version = "*", config = true },
+
+	-- preview
+	{ "iamcco/markdown-preview.nvim" },
 })

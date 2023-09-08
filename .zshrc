@@ -1,7 +1,7 @@
 alias co="code ."
 alias coi="code-insiders ."
-alias ch="~/shellscripts/pycharm ."
-alias ws="~/shellscripts/webstorm ."
+alias ch="pycharm ."
+alias ws="webstorm ."
 alias ds="~/shellscripts/dataspell ."
 # Executes commands at the start of an interactive session.
 #
@@ -76,7 +76,7 @@ bindkey '^]' peco-src
 alias dc="docker-compose"
 # kube ps1
 source <(kubectl completion zsh)
-export PATH=$PATH:/Users/matsukokuumahikari/.cargo/bin
+export PATH="$HOME/.cargo/bin:$PATH"
 export WAKATIME_API_KEY=3fbc8f6f-103c-4192-8f22-e65f1b6f13a6
 
 # peco history
@@ -112,13 +112,6 @@ bindkey '^E' peco-cdr
 
 export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/matsukokuumahikari/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/matsukokuumahikari/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/matsukokuumahikari/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/matsukokuumahikari/google-cloud-sdk/completion.zsh.inc'; fi
-eval "$(github-copilot-cli alias -- "$0")"
-
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 export VOLTA_HOME="$HOME/.volta"
@@ -153,10 +146,19 @@ ulimit -n 4096
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 
 # JINA_CLI_END
+eval "$(github-copilot-cli alias -- "$0")"
 
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/pc-0005829/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/pc-0005829/google-cloud-sdk/path.zsh.inc'; fi
 
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/pc-0005829/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/pc-0005829/google-cloud-sdk/completion.zsh.inc'; fi
+export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 
-
-
-
-
+# pnpm
+export PNPM_HOME="/Users/pc-0005829/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

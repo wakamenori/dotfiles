@@ -46,7 +46,7 @@ zstyle ':prezto:load' pmodule \
   'docker' \
   'osx' \
   'kubectl' \
-  'git-open' \
+  #'git-open' \
 
 
 zstyle ':prezto:module:tmux:auto-start' local 'yes'

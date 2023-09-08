@@ -12,7 +12,7 @@ hop.setup()
 
 which_key.register({
 	f = { "<cmd>lua require'hop'.hint_words()<cr>", "Hop Word" },
-    F = {"<cmd>lua require'hop'.hint_patterns()<cr>", "Hop Pattern"},
+	F = { "<cmd>lua require'hop'.hint_patterns()<cr>", "Hop Pattern" },
 }, { noremap = true, silent = true, mode = { "n", "v" } })
 
 -- vim.api.nvim_set_keymap("n", "f", "<cmd>lua require'hop'.hint_words()<cr>", {})

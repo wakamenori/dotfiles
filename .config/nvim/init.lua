@@ -59,6 +59,7 @@ else
 	-- require("plugins.neotest") -- まだ適当
 	-- require("plugins.noice")
 	-- require("plugins.nvim-tree")
+    require("plugins.neogit")
 	require("plugins.neo-tree")
 	-- require("plugins.obsidian") -- まだ適当
 	require("plugins.scrollbar")
