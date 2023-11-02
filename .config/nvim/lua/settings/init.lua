@@ -53,7 +53,7 @@ opt.spell = true
 
 opt.shortmess:append("c")
 
-vim.g.python3_host_prog = '/Users/pc-0005829/venv/bin/python'
+vim.g.python3_host_prog = "/Users/pc-0005829/venv/bin/python"
 vim.cmd("set whichwrap+=<,>,[,],h,l") -- move to next line with theses keys
 vim.cmd([[set iskeyword+=-]]) -- treat dash separated words as a word text object
 vim.cmd([[set formatoptions-=cro]]) -- TODO: this doesn't seem to work

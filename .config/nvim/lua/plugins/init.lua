@@ -1,4 +1,4 @@
-function get_env_value(env_file, key)
+local function read_env_file_and_get(env_file, key)
 	local env_values = {}
 	for line in io.lines(env_file) do
 		if string.sub(line, 1, 1) ~= "#" then
@@ -10,6 +10,8 @@ function get_env_value(env_file, key)
 	end
 	return env_values[key]
 end
+local home_dir = os.getenv("HOME")
+local env_file = home_dir .. "/.config/nvim/.env"
 
 require("lazy").setup({
 	"wakatime/vim-wakatime",
@@ -23,7 +25,7 @@ require("lazy").setup({
 		-- config = function()
 		-- 	require("text-to-colorscheme").setup({
 		-- 		ai = {
-		-- 			openai_api_key = get_env_value("/Users/matsukokuumahikari/.config/nvim/.env", "OPENAI_API_KEY"),
+		-- 			openai_api_key = read_env_file_and_get("/Users/matsukokuumahikari/.config/nvim/.env", "OPENAI_API_KEY"),
 		-- 		},
 		-- 	})
 		-- end,
@@ -125,7 +127,6 @@ require("lazy").setup({
 	-- Telescope
 	{
 		"nvim-telescope/telescope.nvim",
-		tag = "0.1.1",
 		dependencies = { "nvim-lua/plenary.nvim" },
 	},
 	{
@@ -185,6 +186,48 @@ require("lazy").setup({
 			})
 		end,
 	},
+	{
+		"jackMort/ChatGPT.nvim",
+		event = "VeryLazy",
+		config = function()
+			require("chatgpt").setup({
+				api_key_cmd = "op read 'op://Personal/4vml5a7eguwzp363mgq3oekjmm/api key' --no-newline",
+			})
+		end,
+		dependencies = {
+			"MunifTanjim/nui.nvim",
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope.nvim",
+		},
+	},
+	{
+		"piersolenski/wtf.nvim",
+		dependencies = {
+			"MunifTanjim/nui.nvim",
+		},
+		opts = {
+			openai_api_key = read_env_file_and_get(env_file, "OPENAI_API_KEY"),
+		},
+		keys = {
+			{
+				"gw",
+				mode = { "n", "x" },
+				function()
+					require("wtf").ai()
+				end,
+				desc = "Debug diagnostic with AI",
+			},
+			{
+				mode = { "n" },
+				"gW",
+				function()
+					require("wtf").search()
+				end,
+				desc = "Search diagnostic with Google",
+			},
+		},
+	},
+
 	-- Comment
 	"tpope/vim-commentary",
 	"numToStr/Comment.nvim",
@@ -264,7 +307,7 @@ require("lazy").setup({
 	},
 	"fedepujol/move.nvim",
 	-- Highlight
-	"lukas-reineke/indent-blankline.nvim",
+	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
 	"RRethy/vim-illuminate",
 	{
 		"norcalli/nvim-colorizer.lua",

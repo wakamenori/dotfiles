@@ -3,6 +3,7 @@ alias coi="code-insiders ."
 alias ch="pycharm ."
 alias ws="webstorm ."
 alias ds="~/shellscripts/dataspell ."
+alias ia="idea ."
 # Executes commands at the start of an interactive session.
 #
 # Authors:
@@ -49,6 +50,7 @@ alias gm="git branch --merged|egrep -v '\*|dev|main'|xargs git branch -d"
 # python
 alias vpy="python3 -m venv venv ; source ./venv/bin/activate"
 alias de="deactivate"
+export PATH="/Users/pc-0005829/.local/bin:$PATH"
 
 export PATH="$HOME/.pyenv/bin:$PATH"
 eval "$(pyenv init -)"
@@ -146,6 +148,10 @@ ulimit -n 4096
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 
 # JINA_CLI_END
+
+
+
+
 eval "$(github-copilot-cli alias -- "$0")"
 
 # The next line updates PATH for the Google Cloud SDK.
