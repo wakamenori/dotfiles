@@ -45,7 +45,7 @@ zstyle ':prezto:load' pmodule \
   'syntax-highlighting' \
   'docker' \
   'osx' \
-  'kubectl' \
+  # 'kubectl' \
   #'git-open' \
 
 

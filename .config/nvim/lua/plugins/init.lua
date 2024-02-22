@@ -147,11 +147,7 @@ require("lazy").setup({
 	-- 	end,
 	-- 	dependencies = { "kkharji/sqlite.lua" },
 	-- },
-	{
-		"nvim-telescope/telescope-fzf-native.nvim",
-		build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-	},
-
+	{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 	-- autosave
 	"Pocco81/auto-save.nvim",
 
@@ -186,20 +182,20 @@ require("lazy").setup({
 			})
 		end,
 	},
-	{
-		"jackMort/ChatGPT.nvim",
-		event = "VeryLazy",
-		config = function()
-			require("chatgpt").setup({
-				api_key_cmd = "op read 'op://Personal/4vml5a7eguwzp363mgq3oekjmm/api key' --no-newline",
-			})
-		end,
-		dependencies = {
-			"MunifTanjim/nui.nvim",
-			"nvim-lua/plenary.nvim",
-			"nvim-telescope/telescope.nvim",
-		},
-	},
+	-- {
+	-- 	"jackMort/ChatGPT.nvim",
+	-- 	event = "VeryLazy",
+	-- 	config = function()
+	-- 		require("chatgpt").setup({
+	-- 			api_key_cmd = "op read 'op://Personal/4vml5a7eguwzp363mgq3oekjmm/api key' --no-newline",
+	-- 		})
+	-- 	end,
+	-- 	dependencies = {
+	-- 		"MunifTanjim/nui.nvim",
+	-- 		"nvim-lua/plenary.nvim",
+	-- 		"nvim-telescope/telescope.nvim",
+	-- 	},
+	-- },
 	{
 		"piersolenski/wtf.nvim",
 		dependencies = {
@@ -255,7 +251,13 @@ require("lazy").setup({
 	"saadparwaiz1/cmp_luasnip",
 	"hrsh7th/vim-vsnip",
 	"hrsh7th/vim-vsnip-integ",
-	"L3MON4D3/LuaSnip",
+	{
+		"L3MON4D3/LuaSnip",
+		-- follow latest release.
+		version = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
+		-- install jsregexp (optional!).
+		build = "make install_jsregexp",
+	},
 	"onsails/lspkind-nvim",
 	"akinsho/flutter-tools.nvim",
 

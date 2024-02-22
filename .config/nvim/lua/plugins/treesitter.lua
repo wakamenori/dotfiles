@@ -36,10 +36,11 @@ require('nvim-treesitter.configs').setup {
     autotag = {
         enable = true,
     },
-    context_commentstring = {
-        enable = true,
-    },
+    -- context_commentstring = {
+    --     enable = true,
+    -- },
 }
+vim.g.skip_ts_context_commentstring_module = true
 require('hlargs').setup()
 
 local tsj = require('treesj')

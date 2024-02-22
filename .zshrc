@@ -4,6 +4,7 @@ alias ch="pycharm ."
 alias ws="webstorm ."
 alias ds="~/shellscripts/dataspell ."
 alias ia="idea ."
+alias cr="cursor ."
 # Executes commands at the start of an interactive session.
 #
 # Authors:
@@ -149,16 +150,7 @@ export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 
 # JINA_CLI_END
 
-
-
-
 eval "$(github-copilot-cli alias -- "$0")"
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/pc-0005829/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/pc-0005829/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/pc-0005829/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/pc-0005829/google-cloud-sdk/completion.zsh.inc'; fi
 export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 
 # pnpm
@@ -168,3 +160,13 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+# tabtab source for packages
+# uninstall by removing these lines
+[[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/pc-0005389/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/pc-0005389/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/pc-0005389/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/pc-0005389/google-cloud-sdk/completion.zsh.inc'; fi
