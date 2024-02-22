@@ -150,7 +150,6 @@ export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 
 # JINA_CLI_END
 
-eval "$(github-copilot-cli alias -- "$0")"
 export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 
 # pnpm
